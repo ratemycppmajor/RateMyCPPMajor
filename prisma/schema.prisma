@@ -1,0 +1,112 @@
+generator client {
+  provider = "prisma-client"
+  output = "../app/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+}
+
+model College {
+  id          String        @id @default(cuid())
+  name        String         @unique
+  departments Department[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model Department {
+  id          String     @id @default(cuid())
+  name        String
+  collegeId   String
+  college     College    @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  majors      Major[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+ 
+  @@unique([name, collegeId]) 
+}
+ 
+model Major {
+  id          String     @id @default(cuid())
+  name        String
+  url         String?
+  description String?
+  departmentId String
+  department  Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  reviews     Review[]
+  averageGpa  Float? 
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+ 
+  @@unique([name, departmentId])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+  userId    String
+  majorId   String
+ 
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  major Major @relation(fields: [majorId], references: [id], onDelete: Cascade)
+ 
+  @@map("reviews")
+}
+
+model User {
+  id            	 String    @id @default(cuid())
+  name          	 String?
+  email		 String?   @unique
+  emailVerified DateTime? @map("email_verified")
+  image         	 String?
+  password      	 String?
+  accounts         Account[]
+  reviews       	 Review[]
+ 
+  @@map("users")
+}
+
+
+// OAuth for GitHub and Google
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String  @map("user_id")
+  type               String
+  provider           String
+  providerAccountId  String  @map("provider_account_id")
+  refresh_token      String? @db.Text
+  access_token       String? @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String? @db.Text
+  session_state      String?
+ 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model VerificationToken {
+  id String @id @default(cuid())
+  email String
+  token String @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model PasswordResetToken {
+  id String @id @default(cuid())
+  email String
+  token String @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+
