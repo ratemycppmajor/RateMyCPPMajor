@@ -1,8 +1,8 @@
-    ## Description
+## Getting Started
 
-    Please provide a brief description of the changes introduced in this pull request.
+Please provide a brief description of the changes introduced in this pull request.
 
-    ## Changes Made
+## Changes Made
 
-    - Item 1
-    - Item 2
+- Item 1
+- Item 2
