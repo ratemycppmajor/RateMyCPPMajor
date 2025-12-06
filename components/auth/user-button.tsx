@@ -28,10 +28,10 @@ export const UserButton = () => {
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-40" align="start">
+      <DropdownMenuContent className="w-40 text-primary " align="start">
         <Link href="/settings">
-          <DropdownMenuItem className="cursor-pointer">
-            <Settings className="h-8 w-8 mr-2" />
+          <DropdownMenuItem className="cursor-pointer text-primary hover:text-primary focus:text-primary">
+            <Settings className="h-8 w-8 mr-2 text-primary hover:text-primary" />
             Settings
           </DropdownMenuItem>
         </Link>
@@ -39,8 +39,8 @@ export const UserButton = () => {
         <DropdownMenuSeparator />
 
         <LogoutButton>
-          <DropdownMenuItem className="cursor-pointer">
-            <LogOut className="h-4 w-4 mr-2" />
+          <DropdownMenuItem     className="cursor-pointer text-primary hover:text-primary focus:text-primary">
+            <LogOut className="h-4 w-4 mr-2 text-primary " />
             Logout
           </DropdownMenuItem>
         </LogoutButton>
