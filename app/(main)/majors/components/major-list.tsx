@@ -27,16 +27,16 @@ import {
 
 const sortOptions = [
   {
-    value: "alphabetical",
-    label: "Alphabetical",
+    value: "college",
+    label: "College",
   },
   {
     value: "department",
     label: "Department",
   },
   {
-    value: "college",
-    label: "College",
+    value: "alphabetical",
+    label: "Alphabetical",
   },
 ]
 
@@ -46,20 +46,43 @@ type Props = {
 
 export default function MajorList({ colleges } : Props) {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState("college");
   const [major, setMajor] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
 
   const toggleCollege = (id: string) => {
-    setSelected((prev) => (prev.includes(id) ? prev.filter((college) => college !== id) : [...prev, id]))
+    setSelected((prev) => (prev.includes(id) ? prev.filter((college) => college !== id) : [...prev, id]));
   }
 
   const filteredColleges = selected.length === 0
     ? colleges
     : colleges.filter((college) => selected.includes(college.name));
 
+  const allMajors = filteredColleges.flatMap(college =>
+    college.departments.flatMap(dept =>
+      dept.majors.map(m => ({
+        ...m,
+        collegeName: college.name,
+        departmentName: dept.name
+      }))
+    )
+  );
+
+  const groupedLetter = allMajors.reduce((acc, major) => {
+    const letter = major.name[0];
+    if (!acc[letter]) acc[letter] = [];
+    acc[letter].push(major);
+
+    return acc;
+  }, {} as Record<string, typeof allMajors>);
+
+  const alphabeticalMajors = Object.keys(groupedLetter).sort();
+
+  alphabeticalMajors.forEach(letter => {
+    groupedLetter[letter].sort((a, b) => a.name.localeCompare(b.name));
+  });
 
   return (
     <div className='text-primary'> 
@@ -78,9 +101,8 @@ export default function MajorList({ colleges } : Props) {
 
         <span className='absolute w-full bottom-6 md:bottom-8 text-white'>
           <div className="text-center md:text-left">
-              <div className="max-w-7xl mx-auto md:flex md:justify-between md:items-center space-y-4" >
-                <h1 className="text-2xl md:text-4xl font-bold w-full md:w-10/12 md:pl-8 ml-0 mb-0 items-center">List of Majors</h1>
-                <span className="md:pr-8 font-medium text-xs md:text-base">Pomona, CA</span>
+              <div className="w-10/12 mx-auto md:flex md:justify-between md:items-center space-y-4" >
+                <h1 className="text-2xl md:text-4xl font-bold w-full md:w-10/12 ml-0 mb-0 items-center">List of Majors</h1>
               </div>
           </div>
         </span>
@@ -114,9 +136,7 @@ export default function MajorList({ colleges } : Props) {
                     aria-expanded={open}
                     className="w-[200px] justify-between cursor-pointer shadow-sm hover:text-primary focus:text-primary"
                   >
-                    {value
-                      ? sortOptions.find((option) => option.value === value)?.label
-                      : "Alphabetical"}
+                    {sortOptions.find((option) => option.value === value)?.label}
                     <ChevronDown className="opacity-50" />
                   </Button>
                 </PopoverTrigger>
@@ -127,9 +147,9 @@ export default function MajorList({ colleges } : Props) {
                         {sortOptions.map((option) => (
                           <CommandItem
                             key={option.value}
-                            value={option.value}
+                            value={option.value }
                             onSelect={(currentValue) => {
-                              setValue(currentValue === value ? "" : currentValue)
+                              setValue(currentValue)
                               setOpen(false)
                             }}
                             className={`cursor-pointer ${value === option.value ? "text-primary bg-accent data-[selected=true]:text-primary" : ""}`}
@@ -153,15 +173,34 @@ export default function MajorList({ colleges } : Props) {
 
 
           <div className="text-sm mt-4">
-            <span className="font-semibold">Results Found: 128</span>                     
+            <span className="font-semibold">Results Found: 128</span>  
+              {value === "alphabetical" && <ul className="flex flex-wrap gap-3 text-xl lg:text-2xl mt-5">
+                {( alphabeticalMajors.map((letter) => (
+                    <li key={letter}>
+                      <a 
+                        href={`#${letter}`}
+                        onClick={(e) => {
+                        e.preventDefault();
+                        document.querySelector(`#${letter}`)?.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center',
+                        });
+                        }}
+                      >
+                        {letter}
+                      </a>
+                    </li>
+                )))}  
+              </ul>}
             <hr className='border-primary/30 mt-3'/>
           </div>             
         
           {/* Search Results */}
           <ul className="flex flex-col gap-6 mt-12 mb-20">
-            {filteredColleges.map((college) => (
+            {value !== "alphabetical" ? 
+              filteredColleges.map((college) => (
                 <li key={college.id}>
-                    <h2 className="text-3xl lg:text-4xl mb-8 font-semibold">{college.name}</h2>
+                    {value === "college" && <h2 className="text-3xl lg:text-4xl mb-8 font-semibold">{college.name}</h2>}
                     {college.departments.map((department) => (  
                         <div key={department.id} className="mb-12">
                             <h3 
@@ -170,43 +209,83 @@ export default function MajorList({ colleges } : Props) {
                                 from-[#005030] 
                                 via-[#005030]
                                 to-[#ffb81c]/80
-
                                 lg:from-[#005030]
                                 lg:via-[#005030]
                                 lg:to-[#ffb81c]/80" 
                             >
-                            {department.name}
+                              {department.name}
                             </h3>
                             <div className="p-5 bg-zinc-100 border-border border-solid rounded-b-2xl shadow-sm">
-                            <span className="font-semibold mb-1 block">Bachelor</span>
-                            {department.majors.map((major) => (
-                                <ul key={major.id}>
-                                    <li className="text-xl lg:text-2xl">
-                                        <a href="" className="hover:underline">{major.name}</a>
-                                    </li>
-                                </ul>
-                            ))}
-                                
+                              <span className="font-semibold mb-1 block">Bachelor</span>
+                              {department.majors.map((major) => (
+                                  <ul key={major.id}>
+                                      <li className="text-xl lg:text-2xl">
+                                          <a href="" className="hover:underline">{major.name}</a>
+                                      </li>
+                                  </ul>
+                              ))}      
                             </div>
                             <a 
-                                className="font-light text-sm mt-6 ml-1 block cursor-pointer"
-                                href="#top"
-                                onClick={(e) => {
-                                e.preventDefault();
-                                document.querySelector('#top')?.scrollIntoView({
-                                    behavior: 'smooth',
-                                    block: 'start',
-                                });
-                                }}
+                              className="font-light text-sm mt-6 ml-1 block cursor-pointer"
+                              href="#top"
+                              onClick={(e) => {
+                              e.preventDefault();
+                              document.querySelector('#top')?.scrollIntoView({
+                                  behavior: 'smooth',
+                                  block: 'start',
+                              });
+                              }}
                             >
-                                {"("} back to top {")"}
+                              {"("} back to top {")"}
                             </a>
                         </div>
                     ))}
                 </li> 
-            ))}
-          </ul>
+              ))
+            :
+              alphabeticalMajors.map((letter) => (
+                <ul key={letter}>
+                    <li className="text-xl lg:text-2xl" id={letter}>
+                      <h3 
+                        className="text-white text-xl lg:text-2xl p-2.5 border-border rounded-t-2xl shadow-sm bg-primary
+                        lg:bg-linear-to-r 
+                        from-[#005030] 
+                        via-[#005030]
+                        to-[#ffb81c]/80
 
+                        lg:from-[#005030]
+                        lg:via-[#005030]
+                        lg:to-[#ffb81c]/80" 
+                      >
+                        {letter}
+                      </h3>
+                      <div className="p-5 bg-zinc-100 border-border border-solid rounded-b-2xl shadow-sm">
+                          {groupedLetter[letter].map((major) => (
+                              <ul key={major.id}>
+                                  <li className="text-xl lg:text-2xl">
+                                      <a href="" className="hover:underline">{major.name}</a>
+                                  </li>
+                              </ul>
+                          ))}      
+                      </div>
+                      <a 
+                        className="font-light text-sm mt-6 ml-1 block cursor-pointer"
+                        href="#top"
+                        onClick={(e) => {
+                        e.preventDefault();
+                        document.querySelector('#top')?.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start',
+                        });
+                        }}
+                      >
+                          {"("} back to top {")"}
+                      </a>
+                    </li>
+                </ul>
+              ))
+          }
+          </ul>
         </div>
         
         {/* Filter button */}
