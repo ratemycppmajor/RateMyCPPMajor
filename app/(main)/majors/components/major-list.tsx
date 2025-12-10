@@ -52,9 +52,13 @@ export default function MajorList({ colleges } : Props) {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
 
-  const toggleMajor = (id: string) => {
-    setSelected((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]))
+  const toggleCollege = (id: string) => {
+    setSelected((prev) => (prev.includes(id) ? prev.filter((college) => college !== id) : [...prev, id]))
   }
+
+  const filteredColleges = selected.length === 0
+    ? colleges
+    : colleges.filter((college) => selected.includes(college.name));
 
 
   return (
@@ -155,7 +159,7 @@ export default function MajorList({ colleges } : Props) {
         
           {/* Search Results */}
           <ul className="flex flex-col gap-6 mt-12 mb-20">
-            {colleges.map((college) => (
+            {filteredColleges.map((college) => (
                 <li key={college.id}>
                     <h2 className="text-3xl lg:text-4xl mb-8 font-semibold">{college.name}</h2>
                     {college.departments.map((department) => (  
@@ -227,8 +231,13 @@ export default function MajorList({ colleges } : Props) {
             <span className="font-semibold">Filter College</span>
             {colleges.map(((college) => (
                 <div key={college.id} className="flex items-center gap-3">
-                <Checkbox id={college.name} className="border-primary" />
-                <Label htmlFor={college.name}>{college.name}</Label>
+                  <Checkbox 
+                    id={college.name} 
+                    className="border-primary cursor-pointer"
+                    checked={selected.includes(college.name)}
+                    onCheckedChange={() => toggleCollege(college.name)}
+                  />
+                  <Label htmlFor={college.name}>{college.name}</Label>
                 </div>
             )))}
             </section>
@@ -264,8 +273,8 @@ export default function MajorList({ colleges } : Props) {
                     <Checkbox
                       id={`mobile-filter-${college.name}`}
                       checked={selected.includes(college.name)}
-                      onCheckedChange={() => toggleMajor(college.name)}
-                      className=" border-primary"
+                      onCheckedChange={() => toggleCollege(college.name)}
+                      className="border-primary cursor-pointer"
                     />
                     <div className="flex-1">
                       <div className="text-sm font-medium leading-none text-card-primary ">{college.name}</div>
