@@ -47,7 +47,7 @@ type Props = {
 export default function MajorList({ colleges } : Props) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("college");
-  const [major, setMajor] = useState("");
+  const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
@@ -60,7 +60,31 @@ export default function MajorList({ colleges } : Props) {
     ? colleges
     : colleges.filter((college) => selected.includes(college.name));
 
-  const allMajors = filteredColleges.flatMap(college =>
+  const searchLower = search.toLowerCase();
+
+  const searchFilteredColleges = filteredColleges.map((college) => {
+    const collegeMatches = college.name.toLowerCase().includes(searchLower);
+
+    const filteredDepartments = college.departments.map((dept) => {
+      const deptMatches = dept.name.toLowerCase().includes(searchLower);
+
+      const filteredMajors = dept.majors.sort((a, b) => a.name.localeCompare(b.name))
+      .filter((major) => major .name.toLowerCase().includes(searchLower))
+
+      if (deptMatches || filteredMajors.length > 0) {
+        return { ...dept, majors: filteredMajors };
+      }
+    }).filter(Boolean) as typeof college.departments;
+
+    if (collegeMatches || filteredDepartments.length > 0) {
+      return { ...college, departments: filteredDepartments };
+    }
+
+    return null;
+
+  }).filter(Boolean) as typeof filteredColleges;
+   
+  const allMajors = searchFilteredColleges.flatMap(college =>
     college.departments.flatMap(dept =>
       dept.majors.map(m => ({
         ...m,
@@ -114,13 +138,13 @@ export default function MajorList({ colleges } : Props) {
           <div className='lg:flex lg:space-x-8 space-y-4 mt-6'>
             {/* Search */}
             <div className="space-y-2 w-full">
-              <Label htmlFor="major" className="font-semibold">Search major</Label>
+              <Label htmlFor="search" className="font-semibold">Search major</Label>
               <Input
-                id="major"
+                id="search"
                 className='shadow-sm'
                 placeholder="Major"
-                value={major}
-                onChange={(e) => setMajor(e.target.value)}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
               />
             </div>
 
@@ -198,7 +222,7 @@ export default function MajorList({ colleges } : Props) {
           {/* Search Results */}
           <ul className="flex flex-col gap-6 mt-12 mb-20">
             {value !== "alphabetical" ? 
-              filteredColleges.map((college) => (
+              searchFilteredColleges.map((college) => (
                 <li key={college.id}>
                     {value === "college" && <h2 className="text-3xl lg:text-4xl mb-8 font-semibold">{college.name}</h2>}
                     {college.departments.map((department) => (  
