@@ -198,7 +198,7 @@ export default function MajorList({ colleges } : Props) {
 
 
           <div className="text-sm mt-4">
-            <span className="font-semibold">Results Found: 128</span>  
+            <span className="font-semibold">Results Found: {allMajors.length}</span>  
               {value === "alphabetical" && <ul className="flex flex-wrap gap-3 text-xl lg:text-2xl mt-5">
                 {( alphabeticalMajors.map((letter) => (
                     <li key={letter}>
