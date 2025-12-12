@@ -2,12 +2,13 @@
 
 import { useState } from 'react';
 import { CollegeWithRelations } from '@/types/major';
-import { Check, ChevronDown, SlidersHorizontal, X } from "lucide-react"
-import Image from 'next/image'
+import { Check, ChevronDown, SlidersHorizontal, X } from "lucide-react";
+import Image from 'next/image';
+import Link from 'next/link';
 import { cn } from "@/lib/utils"
 import { Badge } from '@/components/ui/badge';
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
@@ -243,9 +244,9 @@ export default function MajorList({ colleges } : Props) {
                               <span className="font-semibold mb-1 block">Bachelor</span>
                               {department.majors.map((major) => (
                                   <ul key={major.id}>
-                                      <li className="text-xl lg:text-2xl">
-                                          <a href="" className="hover:underline">{major.name}</a>
-                                      </li>
+                                    <li className="text-xl lg:text-2xl">
+                                      <Link href={`/majors/${major.slug}`} className="hover:underline">{major.name}</Link>
+                                    </li>
                                   </ul>
                               ))}      
                             </div>
@@ -287,7 +288,7 @@ export default function MajorList({ colleges } : Props) {
                           {groupedLetter[letter].map((major) => (
                               <ul key={major.id}>
                                   <li className="text-xl lg:text-2xl">
-                                      <a href="" className="hover:underline">{major.name}</a>
+                                      <Link href={`/majors/${major.slug}`} className="hover:underline">{major.name}</Link>
                                   </li>
                               </ul>
                           ))}      
