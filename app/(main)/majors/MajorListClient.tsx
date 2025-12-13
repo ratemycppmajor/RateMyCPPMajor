@@ -45,7 +45,7 @@ type Props = {
   colleges: CollegeWithRelations[];
 };
 
-export default function MajorList({ colleges } : Props) {
+export default function MajorListClient({ colleges } : Props) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("college");
   const [search, setSearch] = useState("");
@@ -70,7 +70,7 @@ export default function MajorList({ colleges } : Props) {
       const deptMatches = dept.name.toLowerCase().includes(searchLower);
 
       const filteredMajors = dept.majors.sort((a, b) => a.name.localeCompare(b.name))
-      .filter((major) => major .name.toLowerCase().includes(searchLower))
+      .filter((major) => major.name.toLowerCase().includes(searchLower))
 
       if (deptMatches || filteredMajors.length > 0) {
         return { ...dept, majors: filteredMajors };

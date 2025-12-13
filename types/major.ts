@@ -9,3 +9,23 @@ export type CollegeWithRelations = Prisma.CollegeGetPayload<{
     };
   };
 }>;
+
+export type MajorWithRelations = Prisma.MajorGetPayload<{
+  select: {
+    name: true;
+    url: true;
+    description: true;
+    averageGpa: true;
+    reviews: true;
+    department: {
+      select: {
+        name: true;
+        college: {
+          select: {
+            name: true;
+          };
+        };
+      };
+    };
+  };
+}>;
