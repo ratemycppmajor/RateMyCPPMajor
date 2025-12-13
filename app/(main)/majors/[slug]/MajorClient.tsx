@@ -1,4 +1,5 @@
 'use client'
+
 import { useEffect } from 'react'
 
 import {
@@ -21,74 +22,84 @@ type Props = {
 export default function MajorClient({ major } : Props) {
   useEffect(() => window.document.scrollingElement?.scrollTo(0, 0), [])
 
+  const MAX_GPA = 4.0
+  const rawGPA = major.averageGpa ?? null
+  const fillAngle = rawGPA != null ? (rawGPA / MAX_GPA) * 360 : 0
+
   const chartData = [
-    { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-  ]
-  
-  const chartConfig = {
-    visitors: {
-      label: "Visitors",
+    {
+      gpa: 100,
+      rawGpa: rawGPA,
+      fill: "var(--color-gpa)", 
+
     },
-    safari: {
-      label: "Safari",
+  ]
+
+  const chartConfig = {
+    gpa: {
+      label: "GPA",
       color: "var(--chart-2)",
     },
   } satisfies ChartConfig
 
   return (
     <div className="mx-auto max-w-7xl">
-      <ChartContainer
+
+      <div>
+        <ChartContainer
           config={chartConfig}
           className="mx-auto aspect-square max-h-[250px]"
-      >
-        <RadialBarChart
-          data={chartData}
-          startAngle={0}
-          endAngle={250}
-          innerRadius={80}
-          outerRadius={110}
         >
-          <PolarGrid
-            gridType="circle"
-            radialLines={false}
-            stroke="none"
-            className="first:fill-muted last:fill-background"
-            polarRadius={[86, 74]}
-          />
-          <RadialBar dataKey="visitors" background cornerRadius={10} />
-          <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
-            <Label
-              content={({ viewBox }) => {
-                if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                  return (
-                    <text
-                      x={viewBox.cx}
-                      y={viewBox.cy}
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                    >
-                      <tspan
+          <RadialBarChart
+            data={chartData}
+            startAngle={90}
+            endAngle={90 - fillAngle}
+            innerRadius={80}
+            outerRadius={110}
+          >
+            <PolarGrid
+              gridType="circle"
+              radialLines={false}
+              stroke="none"
+              className="first:fill-muted last:fill-background"
+              polarRadius={[86, 74]}
+            />
+            <RadialBar dataKey="gpa" background cornerRadius={10} />
+            <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
+              <Label
+                content={({ viewBox }) => {
+                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                    return (
+                      <text
                         x={viewBox.cx}
                         y={viewBox.cy}
-                        className="fill-foreground text-4xl font-bold"
+                        textAnchor="middle"
+                        dominantBaseline="middle"
                       >
-                        {chartData[0].visitors.toLocaleString()}
-                      </tspan>
-                      <tspan
-                        x={viewBox.cx}
-                        y={(viewBox.cy || 0) + 24}
-                        className="fill-muted-foreground"
-                      >
-                        Visitors
-                      </tspan>
-                    </text>
-                  )
-                }
-              }}
-            />
-          </PolarRadiusAxis>
-        </RadialBarChart>
-      </ChartContainer>
+                        <tspan
+                          x={viewBox.cx}
+                          y={viewBox.cy}
+                          className="fill-foreground text-4xl font-bold"
+                        >
+                          {chartData[0].rawGpa != null ? chartData[0].rawGpa : "N/A"}
+                        </tspan>
+                        <tspan
+                          x={viewBox.cx}
+                          y={(viewBox.cy || 0) + 24}
+                          className="fill-muted-foreground"
+                        >
+                          Avg. GPA
+                        </tspan>
+                      </text>
+                    )
+                  }
+                }}
+              />
+            </PolarRadiusAxis>
+          </RadialBarChart>
+        </ChartContainer>
+      </div>
+      
     </div>
   )
 }
