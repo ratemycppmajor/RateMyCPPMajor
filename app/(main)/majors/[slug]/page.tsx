@@ -13,7 +13,16 @@ export default async function Major({ params } : {params : Promise<{ slug: strin
       url: true,
       description: true,
       averageGpa: true,
-      reviews: true,
+      reviews: {
+        select: {
+          rating: true,
+          careerReadiness: true,
+          difficulty: true,
+          satisfaction: true,
+          comment: true,
+          createdAt: true
+        }
+      },
       department: {
         select: {
           name: true,
