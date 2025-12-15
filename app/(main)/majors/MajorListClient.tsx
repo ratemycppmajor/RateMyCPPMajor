@@ -126,9 +126,9 @@ export default function MajorListClient({ colleges } : Props) {
 
         <span className='absolute w-full bottom-6 md:bottom-8 text-white'>
           <div className="text-center md:text-left">
-              <div className="w-10/12 mx-auto md:flex md:justify-between md:items-center space-y-4" >
-                <h1 className="text-2xl md:text-4xl font-bold w-full md:w-10/12 ml-0 mb-0 items-center">List of Majors</h1>
-              </div>
+            <div className="w-10/12 mx-auto md:flex md:justify-between md:items-center space-y-4">
+              <h1 className="text-2xl md:text-4xl font-bold w-full md:w-10/12 ml-0 mb-0 items-center">List of Majors</h1>
+            </div>
           </div>
         </span>
       </div>

@@ -80,8 +80,9 @@ export default function MajorClient({ major } : Props) {
 
   return (
     <div className="mx-auto max-w-7xl px-8">
-
+      {/* First Section */}
       <div className="grid lg:grid-cols-2 grid-rows-1 items-center py-20">
+        {/* Major and Rating */}
         <section>
           <h1 className="text-4xl font-semibold">{major.name}</h1>
           <div className="mt-4 flex flex-wrap items-center gap-2">
@@ -153,6 +154,7 @@ export default function MajorClient({ major } : Props) {
           </div>
         </section>
         
+        {/* Rating options */}
         <div className="flex lg:justify-center mt-12 lg:mt-0">
           <ul className="flex flex-col gap-8">
             {ratingOptions.map(({ name, value, icon: Icon }) => (
@@ -190,12 +192,15 @@ export default function MajorClient({ major } : Props) {
         </div>
       </div>
 
+      {/* Second Section */}
       <div className="grid lg:grid-cols-2 grid-rows-1 items-center gap-12 pb-20">
+        {/* About section */}
         <section>
           <h2 className="text-lg lg:text-xl uppercase font-semibold mb-4">About the major</h2>
           <p className="text-lg lg:text-xl">{major.description}</p>
         </section>
-
+        
+        {/* Average GPA */}
         <div className="flex flex-col">
           <div className="flex-1 pb-0">
             <ChartContainer
@@ -261,6 +266,80 @@ export default function MajorClient({ major } : Props) {
           </div>
         </div>
       </div>
+      
+      {/* Third Section */}
+
+      <div className="pb-20">
+        <div className="text-sm mt-4">
+          <span className="text-lg lg:text-xl font-semibold">{major.reviews.length} Student Reviews</span>  
+          <hr className='border-primary/30 mt-3'/>
+        </div>  
+
+        <div>
+          <ul>
+            {major.reviews.length > 0 && major.reviews.map((review) => (
+              <li key={review.id} className="py-4 border-b border-primary/30">
+                <div className='flex justify-between'>
+                  <div className="flex items-center gap-0.5 pl-8">
+                    {Array.from({ length: 5 }).map((_, i) => {
+                      const filled = i < Math.round(review.rating)
+
+                      return (
+                        <Star
+                          key={i}
+                          className={`h-4 w-4 ${
+                            filled
+                              ? "fill-amber-400 text-amber-400"
+                              : "fill-muted text-muted-foreground/40"
+                          }`}
+                        />
+                      )
+                    })}
+                  </div>
+                  <span>12/13/2025</span>
+                </div>
+
+                <ul className='flex gap-10 mt-3'>
+                  {ratingOptions.map((option) => (
+                    <li key={option.name}>
+                      {option.name}: <span className='font-semibold'>4</span> 
+                    </li>
+                  ))}
+                </ul>
+
+                <p className="my-4">{review.comment}</p>
+              </li>
+            ))}
+          </ul>
+          
+          {/* <ul>
+            <li className="py-4 border-b border-primary/30 ">
+              <div className='flex justify-between'>
+                <div className="flex items-center gap-0.5">
+                  <Star className={`h-4 w-4 }`}/>
+                  <Star className={`h-4 w-4 }`}/>
+                  <Star className={`h-4 w-4 }`}/>
+                  <Star className={`h-4 w-4 }`}/>
+                  <Star className={`h-4 w-4 }`}/>
+                </div>
+
+                <span>12/13/2025</span>
+              </div>
+
+              <ul className='flex gap-10 mt-3'>
+                {ratingOptions.map((option) => (
+                  <li key={option.name}>
+                    {option.name}: <span className='font-semibold'>4</span> 
+                  </li>
+                ))}    
+              </ul>
+
+              <p className='my-4'>A paragraph is a group of sentences focused on a single idea, typically starting with a topic sentence, followed by supporting details (facts, examples, explanations), and often ending with a concluding sentence to wrap up the thought, like a short story about a bad first day of school: My first day of school was a disaster from start to finish. </p> 
+            </li>   
+          </ul> */}
+        </div>     
+      </div>
+      
       
     </div>
   )
