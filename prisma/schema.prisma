@@ -48,6 +48,9 @@ model Review {
   id        String   @id @default(cuid())
   rating    Int
   comment   String?
+  careerReadiness  Int      @db.SmallInt
+  difficulty       Int      @db.SmallInt
+  satisfaction     Int      @db.SmallInt
   createdAt DateTime @default(now())
   userId    String
   majorId   String

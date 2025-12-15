@@ -12,11 +12,20 @@ export type CollegeWithRelations = Prisma.CollegeGetPayload<{
 
 export type MajorWithRelations = Prisma.MajorGetPayload<{
   select: {
-    name: true;
+    name: true
     url: true;
     description: true;
     averageGpa: true;
-    reviews: true;
+    reviews: {
+      select: {
+        rating: true,
+        careerReadiness: true,
+        difficulty: true,
+        satisfaction: true,
+        comment: true,
+        createdAt: true
+      }
+    },
     department: {
       select: {
         name: true;

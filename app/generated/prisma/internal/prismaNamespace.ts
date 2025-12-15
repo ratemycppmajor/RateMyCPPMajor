@@ -1082,6 +1082,9 @@ export const ReviewScalarFieldEnum = {
   id: 'id',
   rating: 'rating',
   comment: 'comment',
+  careerReadiness: 'careerReadiness',
+  difficulty: 'difficulty',
+  satisfaction: 'satisfaction',
   createdAt: 'createdAt',
   userId: 'userId',
   majorId: 'majorId'
