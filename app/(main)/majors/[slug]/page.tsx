@@ -10,6 +10,7 @@ export default async function Major({ params } : {params : Promise<{ slug: strin
     where: { slug },
     select: {
       name: true,
+      imgSrc: true,
       url: true,
       description: true,
       averageGpa: true,

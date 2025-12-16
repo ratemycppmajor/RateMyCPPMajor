@@ -110,12 +110,12 @@ export default function MajorListClient({ colleges } : Props) {
   });
 
   return (
-    <div className='text-primary'> 
+    <div> 
       {/* Hero */}
       <div className="relative h-[400px] w-full">
         <Image
           id="top"
-          src="/images/cpp_banners.webp"
+          src="/images/cpp_banner.webp"
           fill={true}
           alt="CPP campus"
           loading="eager"

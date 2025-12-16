@@ -16,7 +16,7 @@ import {
 
 import { MajorWithRelations } from "@/types/major"
 import Link from 'next/link'
-
+import Image from 'next/image'
 type Props = {
     major: MajorWithRelations;
 }
@@ -81,7 +81,7 @@ export default function MajorClient({ major } : Props) {
   return (
     <div className="mx-auto max-w-7xl px-8">
       {/* First Section */}
-      <div className="grid lg:grid-cols-2 grid-rows-1 items-center py-20">
+      <div className="grid lg:grid-cols-2 grid-rows-1 items-center py-20 gap-2">
         {/* Major and Rating */}
         <section>
           <h1 className="text-4xl font-semibold">{major.name}</h1>
@@ -137,7 +137,7 @@ export default function MajorClient({ major } : Props) {
 
           <div className="mt-5 flex items-center gap-x-6">
             <Link 
-              href="#" 
+              href={`/add/${major.slug}`} 
               className="px-6 py-3 rounded-full bg-primary text-primary-foreground font-semibold transition-all duration-300 ease-in-out hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50"
             >
               Add Review
@@ -155,40 +155,51 @@ export default function MajorClient({ major } : Props) {
         </section>
         
         {/* Rating options */}
-        <div className="flex lg:justify-center mt-12 lg:mt-0">
-          <ul className="flex flex-col gap-8">
-            {ratingOptions.map(({ name, value, icon: Icon }) => (
-              <li key={name} className="text-base whitespace-nowrap">
-                <div className="flex items-center gap-2">
-                  <Icon className="h-5 w-5" />
-                  <span>{name} </span>  
-                </div>
+        <div className="relative h-[400px] rounded-2xl border-4 border-primary overflow-hidden mt-12 lg:mt-0">
+          {major.imgSrc && (
+            <Image
+              src={major.imgSrc}
+              alt={major.name}
+              fill
+              className="object-cover"
+              sizes="(min-width: 1024px) 400px, 100vw"
+              priority
+            />
+          )}
+          <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/35 to-transparent"/>
 
-                {value !== null ? (
-                  <div className="flex items-center gap-0.5 pl-8">
-                    {Array.from({ length: 5 }).map((_, i) => {
-                      const filled = i < Math.round(value)
+          <div className="relative h-full flex items-end p-8">
+            <ul className="flex flex-col gap-4 w-full">
+              {ratingOptions.map(({ name, value, icon: Icon }) => (
+                <li key={name} className="text-sm">
+                  <div className="flex items-center gap-2 text-white">
+                    <Icon className="h-5 w-5" />
+                    <span className="font-medium">{name}</span>
+                  </div>
+                  {value !== null ? (
+                    <div className="flex items-center gap-0.5 pl-7 mt-1">
+                      {Array.from({ length: 5 }).map((_, i) => {
+                        const filled = i < Math.round(value)
 
-                      return (
-                        <Star
-                          key={i}
-                          className={`h-4 w-4 ${
+                        return (
+                          <Star
+                            key={i}
+                            className={`h-4 w-4 ${
                             filled
                               ? "fill-amber-400 text-amber-400"
                               : "fill-muted text-muted-foreground/40"
                           }`}
-                        />
-                      )
-                    })}
-                  </div>
-                ) : (
-                  <div className="pl-8 text-muted-foreground">
-                    N/A
-                  </div>
-                )}
-              </li>
-            ))}
-          </ul>
+                          />
+                        )
+                      })}
+                    </div>
+                  ) : (
+                    <div className="pl-7 mt-1 text-white/70">N/A</div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
 
@@ -197,7 +208,7 @@ export default function MajorClient({ major } : Props) {
         {/* About section */}
         <section>
           <h2 className="text-lg lg:text-xl uppercase font-semibold mb-4">About the major</h2>
-          <p className="text-lg lg:text-xl">{major.description}</p>
+          <p className="text-lg lg:text-xl text-primary/80">{major.description}</p>
         </section>
         
         {/* Average GPA */}

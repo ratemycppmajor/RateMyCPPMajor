@@ -5,7 +5,7 @@ import {
   DEFAULT_LOGIN_REDIRECT,
   apiAuthPrefix,
   authRoutes,
-  publicRoutes,
+  // publicRoutes,
 } from '@/routes';
 
 const { auth } = NextAuth(middlewareAuthConfig);
@@ -17,7 +17,7 @@ export default auth((req) => {
   const isLoggedIn = !!req.auth;
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
-  const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
+  // const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
   // Allow API auth routes to pass through
@@ -36,20 +36,20 @@ export default auth((req) => {
   }
 
   // check if not logged in and not on public route
-  if (!isLoggedIn && !isPublicRoute) {
-    // if you login redirect back to the page you were on
-    let callbackUrl = nextUrl.pathname;
+  // if (!isLoggedIn && !isPublicRoute) {
+  //   // if you login redirect back to the page you were on
+  //   let callbackUrl = nextUrl.pathname;
 
-    if (nextUrl.search) {
-      callbackUrl += nextUrl.search;
-    }
+  //   if (nextUrl.search) {
+  //     callbackUrl += nextUrl.search;
+  //   }
 
-    const encodedCallbackUrl = encodeURIComponent(callbackUrl);
+  //   const encodedCallbackUrl = encodeURIComponent(callbackUrl);
 
-    return NextResponse.redirect(
-      new URL(`/login?callbackUrl=${encodedCallbackUrl}`, nextUrl),
-    );
-  }
+  //   return NextResponse.redirect(
+  //     new URL(`/login?callbackUrl=${encodedCallbackUrl}`, nextUrl),
+  //   );
+  // }
 
   // allow every other route so if user on public route fallback here
   return NextResponse.next();
