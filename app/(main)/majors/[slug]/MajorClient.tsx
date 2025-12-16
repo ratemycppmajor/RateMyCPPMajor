@@ -85,7 +85,7 @@ export default function MajorClient({ major } : Props) {
         {/* Major and Rating */}
         <section>
           <h1 className="text-4xl font-semibold">{major.name}</h1>
-          <div className="mt-4 flex flex-wrap items-center gap-2">
+          <div className="mt-4 flex flex-wrap items-center gap-2 text-primary/80">
             <span>{major.department.college.name}</span>
             <span>|</span>
             <span>{major.department.name}</span>
@@ -174,7 +174,7 @@ export default function MajorClient({ major } : Props) {
                 <li key={name} className="text-sm">
                   <div className="flex items-center gap-2 text-white">
                     <Icon className="h-5 w-5" />
-                    <span className="font-medium">{name}</span>
+                    <span className="font-medium text-shadow-sm">{name}</span>
                   </div>
                   {value !== null ? (
                     <div className="flex items-center gap-0.5 pl-7 mt-1">
@@ -279,7 +279,6 @@ export default function MajorClient({ major } : Props) {
       </div>
       
       {/* Third Section */}
-
       <div className="pb-20">
         <div className="text-sm mt-4">
           <span className="text-lg lg:text-xl font-semibold">{major.reviews.length} Student Reviews</span>  
