@@ -1066,6 +1066,7 @@ export type DepartmentScalarFieldEnum = (typeof DepartmentScalarFieldEnum)[keyof
 export const MajorScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  imgSrc: 'imgSrc',
   url: 'url',
   description: 'description',
   departmentId: 'departmentId',
@@ -1082,6 +1083,9 @@ export const ReviewScalarFieldEnum = {
   id: 'id',
   rating: 'rating',
   comment: 'comment',
+  careerReadiness: 'careerReadiness',
+  difficulty: 'difficulty',
+  satisfaction: 'satisfaction',
   createdAt: 'createdAt',
   userId: 'userId',
   majorId: 'majorId'

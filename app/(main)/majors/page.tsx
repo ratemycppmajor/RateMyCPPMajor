@@ -1,6 +1,6 @@
 import { db } from '@/lib/db';
 import type { CollegeWithRelations } from '@/types/major';
-import MajorList from './components/major-list';
+import MajorList from './MajorListClient';
 
 export default async function Majors() {
 

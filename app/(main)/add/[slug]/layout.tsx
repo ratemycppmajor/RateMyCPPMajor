@@ -1,10 +1,10 @@
 import Navbar from '@/components/navbar';
 
-interface MajorLayoutProps {
+interface AddMajorLayoutProps {
   children: React.ReactNode;
 }
 
-export default function MajorLayout({ children }: MajorLayoutProps) {
+export default function AddMajorLayout({ children }: AddMajorLayoutProps) {
   return (
     <div className="flex flex-col min-h-screen">
     <Navbar />

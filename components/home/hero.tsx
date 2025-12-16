@@ -23,7 +23,7 @@ const Hero = () => {
           </p>
         </div>
 
-        <div className="lg:w-2xl w-96  mx-auto">
+        <div className="lg:w-2xl w-96 mx-auto">
           <Input 
             type="search" 
             placeholder="Search..." 
