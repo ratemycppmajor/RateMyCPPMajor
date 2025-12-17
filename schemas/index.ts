@@ -67,4 +67,15 @@ export const NewPasswordSchema = z.object({
   }),
 });
 
+export const RatingSchema = z.object({
+  major: z.number().int().min(1).max(5),
+  careerReadiness: z.number().int().min(1).max(5),
+  difficulty: z.number().int().min(1).max(5),
+  satisfaction: z.number().int().min(1).max(5),
+}).strict();
 
+export const ReviewSchema = z.object({
+  slug: z.string().min(1),
+  reviewText: z.string().min(60, 'Review must be at least 60 characters'),
+  ratings: RatingSchema,
+}).strict();
