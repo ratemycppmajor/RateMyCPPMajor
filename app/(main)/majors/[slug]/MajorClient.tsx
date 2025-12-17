@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react';
 import { Brain, Briefcase, Smile, Star } from "lucide-react"
+import { Button } from '@/components/ui/button';
 import {
   Label,
   PolarGrid,
@@ -24,6 +25,7 @@ type Props = {
 
 export default function MajorClient({ major } : Props) {
   useEffect(() => window.document.scrollingElement?.scrollTo(0, 0), [])
+
   const { data: session } = useSession();
 
   const avgRating = major?.reviews && major.reviews.length > 0
@@ -82,6 +84,9 @@ export default function MajorClient({ major } : Props) {
       icon: Smile
     } 
   ]
+
+  const REVIEWS_PER_VIEW = 1
+  const [visibleCount, setVisibleCount] = useState(REVIEWS_PER_VIEW)
 
   return (
     <div className="mx-auto max-w-7xl px-8">
@@ -293,7 +298,7 @@ export default function MajorClient({ major } : Props) {
 
         <div>
           <ul>
-            {major.reviews.length > 0 && major.reviews.map((review) => (
+            {major.reviews.slice(0, visibleCount).map((review) => (
               <li key={review.id} className="py-4 border-b border-black/30 flex flex-col gap-y-6">
                 <div className='flex justify-between'>
                   <div className="flex items-center gap-0.5">
@@ -334,7 +339,21 @@ export default function MajorClient({ major } : Props) {
               </li>
             ))}
           </ul>
-        </div>     
+        </div>    
+        
+        {visibleCount < major.reviews.length && (
+          <div className="mt-8 flex justify-center">
+            <Button
+            size="lg"
+              onClick={() => setVisibleCount((prev) => prev + REVIEWS_PER_VIEW)}
+              className="px-11 py-7 rounded-full bg-primary text-primary-foreground font-semibold transition-all duration-300 ease-in-out hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 cursor-pointer"
+              aria-label="Load more reviews"
+            >
+              Load more reviews
+            </Button>
+          </div>
+        )}
+
       </div>
       
       
