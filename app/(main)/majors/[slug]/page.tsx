@@ -23,7 +23,8 @@ export default async function Major({ params } : {params : Promise<{ slug: strin
           difficulty: true,
           satisfaction: true,
           comment: true,
-          createdAt: true
+          createdAt: true,
+          userId: true,
         }
       },
       department: {

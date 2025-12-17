@@ -85,8 +85,10 @@ export default function MajorClient({ major } : Props) {
     } 
   ]
 
-  const REVIEWS_PER_VIEW = 1
+  const REVIEWS_PER_VIEW = 5
   const [visibleCount, setVisibleCount] = useState(REVIEWS_PER_VIEW)
+
+  const currentUserId = session?.user?.id
 
   return (
     <div className="mx-auto max-w-7xl px-8">
@@ -336,6 +338,12 @@ export default function MajorClient({ major } : Props) {
                 </ul>
 
                 <p className="my-3 text-black wrap-break-word">{review.comment}</p>
+
+                {review.userId === currentUserId  && 
+                  <div>
+                    aw
+                  </div>
+                }
               </li>
             ))}
           </ul>
