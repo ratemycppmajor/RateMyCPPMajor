@@ -1,11 +1,13 @@
 "use client"
 
+import { createReview } from '@/actions/create-review'
 import { AddMajorWithRelations } from "@/types/major"
 import Image from 'next/image';
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import StarRating from "./components/StarRating";
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 type Props = {
     major: AddMajorWithRelations;
@@ -26,6 +28,9 @@ export default function AddMajorClient({ major } : Props) {
     })
 
     const [reviewText, setReviewText] = useState("")
+    const [error, setError] = useState<string | null>(null)
+    const [isPending, startTransition] = useTransition()
+    const router = useRouter()
 
     const ratingOptions = [
         {
@@ -50,16 +55,30 @@ export default function AddMajorClient({ major } : Props) {
             description: "Overall satisfaction with the program"
         } 
     ] 
-    
     const handleSubmit = () => {
+        startTransition(async () => {
+            setError(null)
 
+            const result = await createReview({
+                slug: major.slug,
+                reviewText,
+                ratings,
+            })
+
+            if (result?.error) {
+                setError(result.error)
+                return
+            }
+
+            router.push(`/majors/${major.slug}`)
+        })
     }
 
     const handleRatingChange = (key: keyof typeof ratings, value: number) => {
         setRatings((prev) => ({ ...prev, [key]: value }))
     }
 
-    const isFormValid = ratings.major > 0 && ratings.careerReadiness > 0 && ratings.difficulty && ratings.satisfaction > 0 && reviewText.length >= 60
+    const isFormValid = ratings.major > 0 && ratings.careerReadiness > 0 && ratings.difficulty > 0 && ratings.satisfaction > 0 && reviewText.length >= 60
 
     return (
     <div>
@@ -118,15 +137,18 @@ export default function AddMajorClient({ major } : Props) {
                     </p>
                 </div>
 
+                {error && (
+                    <p className="text-destructive text-sm">{error}</p>
+                )}
                 <div className="flex justify-center gap-4 pt-4">
                     <div className={!isFormValid ? "cursor-not-allowed" : ""}>
                         <Button
                             size="lg"
                             onClick={handleSubmit}
-                            disabled={!isFormValid}
+                            disabled={!isFormValid || isPending}
                             className="min-w-[140px] p-7 text-base"
                         >
-                            Submit Review
+                            {isPending ? "Submitting..." : "Submit Review"}
                         </Button>
                     </div>
                 </div>

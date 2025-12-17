@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { useSession } from 'next-auth/react';
 import { Brain, Briefcase, Smile, Star } from "lucide-react"
 import {
   Label,
@@ -23,6 +24,7 @@ type Props = {
 
 export default function MajorClient({ major } : Props) {
   useEffect(() => window.document.scrollingElement?.scrollTo(0, 0), [])
+  const { data: session } = useSession();
 
   const avgRating = major?.reviews && major.reviews.length > 0
     ? major.reviews.reduce((sum, review) => sum + review.rating, 0) / major.reviews.length
@@ -63,16 +65,19 @@ export default function MajorClient({ major } : Props) {
   const ratingOptions = [
     {
       name: "Career Readiness",
+      key: "careerReadiness" as const,
       value: avgCareerReadiness,
       icon: Briefcase
     },
     {
       name: "Difficulty",
+      key: "difficulty" as const,
       value: avgDifficulty,
       icon: Brain,
     },
     {
       name: "Satisfaction",
+      key: "satisfaction",
       value: avgSatisfaction,
       icon: Smile
     } 
@@ -137,7 +142,7 @@ export default function MajorClient({ major } : Props) {
 
           <div className="mt-5 flex items-center gap-x-6">
             <Link 
-              href={`/add/${major.slug}`} 
+              href={session ? `/add/${major.slug}` : '/login'} 
               className="px-6 py-3 rounded-full bg-primary text-primary-foreground font-semibold transition-all duration-300 ease-in-out hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50"
             >
               Add Review
@@ -170,8 +175,8 @@ export default function MajorClient({ major } : Props) {
 
           <div className="relative h-full flex items-end p-8">
             <ul className="flex flex-col gap-4 w-full">
-              {ratingOptions.map(({ name, value, icon: Icon }) => (
-                <li key={name} className="text-sm">
+              {ratingOptions.map(({ name, key, value, icon: Icon }) => (
+                <li key={key} className="text-sm">
                   <div className="flex items-center gap-2 text-white">
                     <Icon className="h-5 w-5" />
                     <span className="font-medium text-shadow-sm">{name}</span>
@@ -208,7 +213,7 @@ export default function MajorClient({ major } : Props) {
         {/* About section */}
         <section>
           <h2 className="text-lg lg:text-xl uppercase font-semibold mb-4">About the major</h2>
-          <p className="text-lg lg:text-xl text-primary/80">{major.description}</p>
+          <p className="text-lg lg:text-xl text-black">{major.description}</p>
         </section>
         
         {/* Average GPA */}
@@ -280,24 +285,25 @@ export default function MajorClient({ major } : Props) {
       
       {/* Third Section */}
       <div className="pb-20">
+        {/* Review list */}
         <div className="text-sm mt-4">
           <span className="text-lg lg:text-xl font-semibold">{major.reviews.length} Student Reviews</span>  
-          <hr className='border-primary/30 mt-3'/>
+          <hr className='border-black/30 mt-3'/>
         </div>  
 
         <div>
           <ul>
             {major.reviews.length > 0 && major.reviews.map((review) => (
-              <li key={review.id} className="py-4 border-b border-primary/30">
+              <li key={review.id} className="py-4 border-b border-black/30 flex flex-col gap-y-6">
                 <div className='flex justify-between'>
-                  <div className="flex items-center gap-0.5 pl-8">
-                    {Array.from({ length: 5 }).map((_, i) => {
+                  <div className="flex items-center gap-0.5">
+                    {Array.from({ length: review.rating }).map((_, i) => {
                       const filled = i < Math.round(review.rating)
 
                       return (
                         <Star
                           key={i}
-                          className={`h-4 w-4 ${
+                          className={`lg:h-8 lg:w-8 ${
                             filled
                               ? "fill-amber-400 text-amber-400"
                               : "fill-muted text-muted-foreground/40"
@@ -306,47 +312,28 @@ export default function MajorClient({ major } : Props) {
                       )
                     })}
                   </div>
-                  <span>12/13/2025</span>
+                  <span className="font-semibold">{review.createdAt.toLocaleDateString()}</span>
                 </div>
 
-                <ul className='flex gap-10 mt-3'>
-                  {ratingOptions.map((option) => (
-                    <li key={option.name}>
-                      {option.name}: <span className='font-semibold'>4</span> 
-                    </li>
-                  ))}
+                <ul className='flex gap-2 lg:gap-8 text-black flex-wrap'>
+                  <li className='border rounded-2xl p-1.5 bg-zinc-50 text-sm '>
+                    Career Readiness: {" "}
+                    <span className="font-semibold text-primary">{review.careerReadiness}</span>
+                  </li>
+                  <li className='border rounded-2xl p-1.5 bg-zinc-50 text-sm '>
+                    Difficulty: {" "}
+                    <span className="font-semibold text-primary">{review.difficulty}</span>
+                  </li>
+                  <li className='border rounded-2xl p-1.5 bg-zinc-50 text-sm '>
+                    Satisfaction: {" "}
+                    <span className="font-semibold text-primary">{review.satisfaction}</span>
+                  </li>
                 </ul>
 
-                <p className="my-4">{review.comment}</p>
+                <p className="my-3 text-black wrap-break-word">{review.comment}</p>
               </li>
             ))}
           </ul>
-          
-          {/* <ul>
-            <li className="py-4 border-b border-primary/30 ">
-              <div className='flex justify-between'>
-                <div className="flex items-center gap-0.5">
-                  <Star className={`h-4 w-4 }`}/>
-                  <Star className={`h-4 w-4 }`}/>
-                  <Star className={`h-4 w-4 }`}/>
-                  <Star className={`h-4 w-4 }`}/>
-                  <Star className={`h-4 w-4 }`}/>
-                </div>
-
-                <span>12/13/2025</span>
-              </div>
-
-              <ul className='flex gap-10 mt-3'>
-                {ratingOptions.map((option) => (
-                  <li key={option.name}>
-                    {option.name}: <span className='font-semibold'>4</span> 
-                  </li>
-                ))}    
-              </ul>
-
-              <p className='my-4'>A paragraph is a group of sentences focused on a single idea, typically starting with a topic sentence, followed by supporting details (facts, examples, explanations), and often ending with a concluding sentence to wrap up the thought, like a short story about a bad first day of school: My first day of school was a disaster from start to finish. </p> 
-            </li>   
-          </ul> */}
         </div>     
       </div>
       
