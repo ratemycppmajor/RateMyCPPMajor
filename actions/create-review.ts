@@ -31,10 +31,10 @@ export const createReview = async (input: z.infer<typeof ReviewSchema>) => {
   const review = await db.review.create({
     data: {
       rating: ratings.major,
+      comment: reviewText,
       careerReadiness: ratings.careerReadiness,
       difficulty: ratings.difficulty,
       satisfaction: ratings.satisfaction,
-      comment: reviewText,
       userId: user.id,
       majorId: major.id,
     },

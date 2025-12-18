@@ -26,7 +26,8 @@ export type MajorWithRelations = Prisma.MajorGetPayload<{
         difficulty: true,
         satisfaction: true,
         comment: true,
-        createdAt: true
+        createdAt: true,
+        userId: true
       }
     },
     department: {

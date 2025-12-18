@@ -8,6 +8,7 @@ export const publicRoutes = [
   '/new-verification',
   '/videos/sample.mp4',
   '/majors',
+  '/add',
 ];
 
 /**
