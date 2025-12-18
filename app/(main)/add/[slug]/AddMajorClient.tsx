@@ -55,6 +55,7 @@ export default function AddMajorClient({ major } : Props) {
             description: "Overall satisfaction with the program"
         } 
     ] 
+    
     const handleSubmit = () => {
         startTransition(async () => {
             setError(null)

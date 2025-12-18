@@ -1,9 +1,19 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useTransition } from 'react'
 import { useSession } from 'next-auth/react';
-import { Brain, Briefcase, Smile, Star } from "lucide-react"
+import { Brain, Briefcase, Smile, Star, Trash} from "lucide-react"
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import {
   Label,
   PolarGrid,
@@ -18,15 +28,25 @@ import {
 
 import { MajorWithRelations } from "@/types/major"
 import Link from 'next/link'
+import { useRouter } from "next/navigation";
 import Image from 'next/image'
+import { deleteReview } from '@/actions/delete-review';
 type Props = {
     major: MajorWithRelations;
 }
 
 export default function MajorClient({ major } : Props) {
   useEffect(() => window.document.scrollingElement?.scrollTo(0, 0), [])
+  const [isPending, startTransition] = useTransition()
+  const router = useRouter()
+
 
   const { data: session } = useSession();
+
+  const REVIEWS_PER_VIEW = 5
+  const [visibleCount, setVisibleCount] = useState(REVIEWS_PER_VIEW)
+
+  const currentUserId = session?.user?.id
 
   const avgRating = major?.reviews && major.reviews.length > 0
     ? major.reviews.reduce((sum, review) => sum + review.rating, 0) / major.reviews.length
@@ -85,10 +105,12 @@ export default function MajorClient({ major } : Props) {
     } 
   ]
 
-  const REVIEWS_PER_VIEW = 5
-  const [visibleCount, setVisibleCount] = useState(REVIEWS_PER_VIEW)
-
-  const currentUserId = session?.user?.id
+  const handleReviewDeletion = (reviewId : string) => {
+      startTransition(async () => {
+          await deleteReview(reviewId)
+          router.refresh()
+      })
+  }
 
   return (
     <div className="mx-auto max-w-7xl px-8">
@@ -340,8 +362,35 @@ export default function MajorClient({ major } : Props) {
                 <p className="my-3 text-black wrap-break-word">{review.comment}</p>
 
                 {review.userId === currentUserId  && 
-                  <div>
-                    aw
+                  <div className="flex justify-end">
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Trash className="text-red-700 transition-all duration-300 ease-in-outcursor-pointer h-6 w-6 hover:text-destructive cursor-pointer" />
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-md">
+                        <DialogHeader>
+                          <DialogTitle className="text-primary">Delete Review</DialogTitle>
+                          <DialogDescription>
+                            Are you sure you want to delete your review? This
+                            action cannot be undone.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter>
+                          <DialogClose asChild>
+                            <Button className="cursor-pointer" variant="outline">Cancel</Button>
+                          </DialogClose>
+                          <Button
+                            className="cursor-pointer bg-red-700 transition-all duration-300 ease-in-out"
+                            onClick={() => handleReviewDeletion(review.id)}
+                            type="button"
+                            variant="destructive"
+                            disabled={isPending}
+                          >
+                            {isPending ? "Deleting..." : "Delete Review"}
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                 }
               </li>
