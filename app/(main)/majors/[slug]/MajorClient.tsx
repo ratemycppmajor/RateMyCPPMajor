@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useTransition } from 'react'
 import { useSession } from 'next-auth/react';
-import { Brain, Briefcase, Smile, Star, Trash} from "lucide-react"
+import { Brain, Briefcase, Smile, Star, Trash, Pencil} from "lucide-react"
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -14,6 +14,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import {
   Label,
   PolarGrid,
@@ -362,10 +367,36 @@ export default function MajorClient({ major } : Props) {
                 <p className="my-3 text-black wrap-break-word">{review.comment}</p>
 
                 {review.userId === currentUserId  && 
-                  <div className="flex justify-end">
+                  <div className="flex justify-end gap-x-3">
+                    {/* Edit review */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Link href={`/edit/${major.slug}/${review.id}`}>
+                          <Pencil 
+                            className='cursor-pointer hover:text-primary/80' 
+                            aria-label="Edit review"
+                          />
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom">
+                        <p>Edit review</p>
+                      </TooltipContent>
+                    </Tooltip>
+                    {/* Delete review */}
                     <Dialog>
                       <DialogTrigger asChild>
-                        <Trash className="text-red-700 transition-all duration-300 ease-in-outcursor-pointer h-6 w-6 hover:text-destructive cursor-pointer" />
+                        <button aria-label="Delete review">
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Trash 
+                                className="text-red-700 h-6 w-6 transition-all duration-300 ease-in-out hover:text-destructive cursor-pointer"  
+                              />
+                            </TooltipTrigger>
+                            <TooltipContent side="bottom">
+                              <p>Delete review</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </button>
                       </DialogTrigger>
                       <DialogContent className="sm:max-w-md">
                         <DialogHeader>
@@ -385,6 +416,7 @@ export default function MajorClient({ major } : Props) {
                             type="button"
                             variant="destructive"
                             disabled={isPending}
+                            aria-label="Delete review"
                           >
                             {isPending ? "Deleting..." : "Delete Review"}
                           </Button>

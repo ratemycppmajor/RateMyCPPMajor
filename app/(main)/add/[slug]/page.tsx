@@ -1,16 +1,15 @@
 import { db } from '@/lib/db';
-import { AddMajorWithRelations } from '@/types/major';
+import { AddReviewWithRelations } from '@/types/major';
 import { notFound } from 'next/navigation';
-import AddMajorClient from './AddMajorClient';
+import ReviewClient from '@/components/review/ReviewClient';
 
-export default async function AddMajor({ params } : {params : Promise<{ slug: string }>}) {
+export default async function AddReview({ params } : {params : Promise<{ slug: string }>}) {
   const { slug } = await params;
 
-  const major : AddMajorWithRelations | null = await db.major.findUnique({
+  const major : AddReviewWithRelations | null = await db.major.findUnique({
     where: { slug },
     select: {
       name: true,
-      imgSrc: true,
       slug: true,
       department: {
         select: {
@@ -30,6 +29,6 @@ export default async function AddMajor({ params } : {params : Promise<{ slug: st
   }
 
   return (
-    <AddMajorClient major={major} />
+    <ReviewClient major={major} />
   )
 }

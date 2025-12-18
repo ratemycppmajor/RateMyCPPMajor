@@ -43,10 +43,9 @@ export type MajorWithRelations = Prisma.MajorGetPayload<{
   };
 }>;
 
-export type AddMajorWithRelations = Prisma.MajorGetPayload<{
+export type AddReviewWithRelations = Prisma.MajorGetPayload<{
   select: {
     name: true
-    imgSrc: true
     slug: true;
     department: {
       select: {
