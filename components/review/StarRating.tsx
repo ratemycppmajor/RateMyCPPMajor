@@ -15,7 +15,7 @@ export default function StarRating({ label, description, value, onChangeAction }
 
   return (
     <div className="flex flex-col gap-3 p-6 border rounded-xl bg-card hover:border-primary/50 transition-colors shadow-sm">
-        <span className="font-semibold text-xl">{label}</span>
+        <span className="font-semibold text-xl">Rate the {label}</span>
         <span className="text-primary/80">{description}</span>
         <div className="flex items-center gap-2">
             {[1,2,3,4,5].map((star) => {

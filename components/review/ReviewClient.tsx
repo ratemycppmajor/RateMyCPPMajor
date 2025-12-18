@@ -1,17 +1,30 @@
 "use client"
 
+import { updateReview } from '@/actions/update-review'
 import { createReview } from '@/actions/create-review'
-import { AddMajorWithRelations } from "@/types/major"
+import { AddReviewWithRelations } from "@/types/major"
 import Image from 'next/image';
 import { useState, useTransition } from "react";
-import StarRating from "./components/StarRating";
+import StarRating from './StarRating';
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
-type Props = {
-    major: AddMajorWithRelations;
+
+type ReviewData = {
+    id: string;
+    rating: number;
+    comment: string | null;
+    careerReadiness: number;
+    difficulty: number;
+    satisfaction: number;
 }
+
+type Props = {
+    major: AddReviewWithRelations;
+    review?: ReviewData;
+}
+
 interface Ratings {
   major: number;
   careerReadiness: number;
@@ -19,69 +32,91 @@ interface Ratings {
   satisfaction: number;
   [key: string]: number;
 }
-export default function AddMajorClient({ major } : Props) {
-    const [ratings, setRatings] : [Ratings, React.Dispatch<React.SetStateAction<Ratings>>] = useState({
-        major: 0,
-        careerReadiness: 0,
-        difficulty: 0,
-        satisfaction: 0,
-    })
 
-    const [reviewText, setReviewText] = useState("")
-    const [error, setError] = useState<string | null>(null)
-    const [isPending, startTransition] = useTransition()
-    const router = useRouter()
+export default function ReviewClient({ major, review } : Props) {
+  const [ratings, setRatings] : [Ratings, React.Dispatch<React.SetStateAction<Ratings>>] = useState({
+    major: review?.rating ?? 0,
+    careerReadiness: review?.careerReadiness ?? 0,
+    difficulty: review?.difficulty ?? 0,
+    satisfaction: review?.satisfaction ?? 0,
+  })  
 
-    const ratingOptions = [
-        {
-            name: "Major",
-            key: "major" as const,
-            description: "Overall rating of the major program"
+  const [reviewText, setReviewText] = useState(review?.comment || "")
+  const [error, setError] = useState<string | null>(null)
+  const [isPending, startTransition] = useTransition()
+  const router = useRouter()
 
-        },
-        {
-            name: "Career Readiness",
-            key: "careerReadiness" as const,
-            description: "How well the major prepares you for your career"
-        },
-        {
-            name: "Difficulty",
-            key: "difficulty" as const,
-            description: "Academic challenge and workload"
-        },
-        {
-            name: "Satisfaction",
-            key: "satisfaction",
-            description: "Overall satisfaction with the program"
-        } 
-    ] 
-    
-    const handleSubmit = () => {
-        startTransition(async () => {
-            setError(null)
+  const ratingOptions = [
+    {
+        name: "Major",
+        key: "major" as const,
+        description: "Overall rating of the major program"
 
-            const result = await createReview({
-                slug: major.slug,
-                reviewText,
-                ratings,
-            })
+    },
+    {
+        name: "Career Readiness",
+        key: "careerReadiness" as const,
+        description: "How well the major prepares you for your career"
+    },
+    {
+        name: "Difficulty",
+        key: "difficulty" as const,
+        description: "Academic challenge and workload"
+    },
+    {
+        name: "Satisfaction",
+        key: "satisfaction",
+        description: "Overall satisfaction with the program"
+    } 
+  ] 
 
-            if (result?.error) {
-                setError(result.error)
-                return
-            }
+  const handleUpdate = () => {
+    startTransition(async () => {
+        setError(null)
 
-            router.push(`/majors/${major.slug}`)
+        if(!review) return
+
+        const result = await updateReview({
+            reviewId: review.id,
+            reviewText,
+            ratings,
         })
-    }
 
-    const handleRatingChange = (key: keyof typeof ratings, value: number) => {
-        setRatings((prev) => ({ ...prev, [key]: value }))
-    }
+        if (result?.error) {
+            setError(result.error)
+            return
+        }
 
-    const isFormValid = ratings.major > 0 && ratings.careerReadiness > 0 && ratings.difficulty > 0 && ratings.satisfaction > 0 && reviewText.length >= 60
+        router.push(`/majors/${major.slug}/${review.id}`)
+    })
+  }
 
-    return (
+  const handleSubmit = () => {
+    startTransition(async () => {
+        setError(null)
+
+        const result = await createReview({
+            slug: major.slug,
+            reviewText,
+            ratings,
+        })
+
+        if (result?.error) {
+            setError(result.error)
+            return
+        }
+
+        router.push(`/majors/${major.slug}`)
+    })
+}
+
+  const handleRatingChange = (key: keyof typeof ratings, value: number) => {
+    setRatings((prev) => ({ ...prev, [key]: value }))
+  }
+  
+  const isFormValid = ratings.major > 0 && ratings.careerReadiness > 0 && ratings.difficulty > 0 && ratings.satisfaction > 0 && reviewText.length >= 60
+
+  return (
     <div>
         {/* Hero */}
         <div className="relative h-[400px] w-full">
@@ -109,9 +144,9 @@ export default function AddMajorClient({ major } : Props) {
             </span>
         </div>
 
-        {/* Add review */}
+        {/* Create/Edit review */}
         <section className="mx-auto max-w-7xl px-8 py-8">
-            <h2 className="my-6 text-2xl lg:text-3xl font-medium">Add Review</h2>
+            <h2 className="my-6 text-2xl lg:text-3xl font-medium">{!review ? "Write a" : "Edit"} Review</h2>
 
             <div className="flex flex-col gap-y-10">
                 {ratingOptions.map((option) => (
@@ -145,18 +180,16 @@ export default function AddMajorClient({ major } : Props) {
                     <div className={!isFormValid ? "cursor-not-allowed" : ""}>
                         <Button
                             size="lg"
-                            onClick={handleSubmit}
+                            onClick={!review ? handleSubmit : handleUpdate}
                             disabled={!isFormValid || isPending}
-                            className="min-w-[140px] p-7 text-base"
+                            className="min-w-[140px] p-7 text-base cursor-pointer"
                         >
-                            {isPending ? "Submitting..." : "Submit Review"}
+                            {!review ? (isPending ? "Submitting..." : "Submit Review"): (isPending ? "Updating..." : "Update Review")}
                         </Button>
                     </div>
                 </div>
             </div>
         </section>
-        
-
-    </div>
+    </div>    
   )
 }
