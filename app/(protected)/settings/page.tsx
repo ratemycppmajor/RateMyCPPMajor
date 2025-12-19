@@ -17,7 +17,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { settings } from '@/actions/settings';
 import { deleteAccount } from '@/actions/delete-account';
@@ -93,11 +92,8 @@ const Settings = () => {
 
   return (
     <div className="flex items-center justify-center w-full max-w-2xl">
-      <Card className="w-full h-full p-6 mx-8">
-        <CardHeader>
-          <p className="text-2xl font-semibold text-center">⚙️ Settings</p>
-        </CardHeader>
-        <CardContent>
+      <div className="w-full h-full p-6 mx-8">
+        <div>
           <Form {...form}>
             <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
               <div className="space-y-4">
@@ -217,8 +213,8 @@ const Settings = () => {
               </div>
             </form>
           </Form>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 };
