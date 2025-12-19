@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { Input } from "@/components/ui/input"
-import HomeNavbar from '../home-navbar';
+import HomeNavbar from '../navbar/home-navbar';
 import { useState } from 'react';
 
 const Hero = () => {
