@@ -19,7 +19,7 @@ export const UserButton = () => {
   const { user } = useCurrentUser();
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger>
         <Avatar className="h-8 w-8 mx-3 cursor-pointer">
           <AvatarImage src={user?.image || undefined} />
