@@ -1,4 +1,4 @@
-import Navbar from '@/components/navbar';
+import MainNavbar from '@/components/navbar/main-navbar';
 
 interface AddMajorLayoutProps {
   children: React.ReactNode;
@@ -7,7 +7,7 @@ interface AddMajorLayoutProps {
 export default function AddMajorLayout({ children }: AddMajorLayoutProps) {
   return (
     <div className="flex flex-col min-h-screen">
-    <Navbar />
+    <MainNavbar />
     <div className="grow">{children}</div>
     </div>
   );

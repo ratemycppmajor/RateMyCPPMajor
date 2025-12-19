@@ -1,4 +1,4 @@
-import Navbar from '@/components/navbar';
+import Navbar from '@/components/navbar/main-navbar';
 import Footer from '@/components/footer';
 
 interface ProtectedLayoutProps {
