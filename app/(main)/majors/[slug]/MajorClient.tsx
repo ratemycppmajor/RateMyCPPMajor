@@ -1,24 +1,8 @@
 'use client'
 
-import { useState, useEffect, useTransition } from 'react'
-import { useSession } from 'next-auth/react';
-import { Brain, Briefcase, Smile, Star, Trash, Pencil} from "lucide-react"
-import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
+import { useEffect } from 'react'
+import { useSession } from 'next-auth/react'
+import { Brain, Briefcase, Smile, Star} from "lucide-react"
 import {
   Label,
   PolarGrid,
@@ -33,25 +17,16 @@ import {
 
 import { MajorWithRelations } from "@/types/major"
 import Link from 'next/link'
-import { useRouter } from "next/navigation";
 import Image from 'next/image'
-import { deleteReview } from '@/actions/delete-review';
+import ReviewList from '@/components/review/ReviewList';
+
 type Props = {
     major: MajorWithRelations;
 }
 
 export default function MajorClient({ major } : Props) {
   useEffect(() => window.document.scrollingElement?.scrollTo(0, 0), [])
-  const [isPending, startTransition] = useTransition()
-  const router = useRouter()
-
-
-  const { data: session } = useSession();
-
-  const REVIEWS_PER_VIEW = 5
-  const [visibleCount, setVisibleCount] = useState(REVIEWS_PER_VIEW)
-
-  const currentUserId = session?.user?.id
+  const { data: session } = useSession()
 
   const avgRating = major?.reviews && major.reviews.length > 0
     ? major.reviews.reduce((sum, review) => sum + review.rating, 0) / major.reviews.length
@@ -110,12 +85,6 @@ export default function MajorClient({ major } : Props) {
     } 
   ]
 
-  const handleReviewDeletion = (reviewId : string) => {
-      startTransition(async () => {
-          await deleteReview(reviewId)
-          router.refresh()
-      })
-  }
 
   return (
     <div className="mx-auto max-w-7xl px-8">
@@ -325,123 +294,13 @@ export default function MajorClient({ major } : Props) {
           <hr className='border-black/30 mt-3'/>
         </div>  
 
-        <div>
-          <ul>
-            {major.reviews.slice(0, visibleCount).map((review) => (
-              <li key={review.id} className="py-4 border-b border-black/30 flex flex-col gap-y-6">
-                <div className='flex justify-between'>
-                  <div className="flex items-center gap-0.5">
-                    {Array.from({ length: review.rating }).map((_, i) => {
-                      const filled = i < Math.round(review.rating)
-
-                      return (
-                        <Star
-                          key={i}
-                          className={`lg:h-8 lg:w-8 ${
-                            filled
-                              ? "fill-amber-400 text-amber-400"
-                              : "fill-muted text-muted-foreground/40"
-                          }`}
-                        />
-                      )
-                    })}
-                  </div>
-                  <span className="font-semibold">{review.createdAt.toLocaleDateString()}</span>
-                </div>
-
-                <ul className='flex gap-2 lg:gap-8 text-black flex-wrap'>
-                  <li className='border rounded-2xl p-1.5 bg-zinc-50 text-sm '>
-                    Career Readiness: {" "}
-                    <span className="font-semibold text-primary">{review.careerReadiness}</span>
-                  </li>
-                  <li className='border rounded-2xl p-1.5 bg-zinc-50 text-sm '>
-                    Difficulty: {" "}
-                    <span className="font-semibold text-primary">{review.difficulty}</span>
-                  </li>
-                  <li className='border rounded-2xl p-1.5 bg-zinc-50 text-sm '>
-                    Satisfaction: {" "}
-                    <span className="font-semibold text-primary">{review.satisfaction}</span>
-                  </li>
-                </ul>
-
-                <p className="my-3 text-black wrap-break-word">{review.comment}</p>
-
-                {review.userId === currentUserId  && 
-                  <div className="flex justify-end gap-x-3">
-                    {/* Edit review */}
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Link href={`/edit/${major.slug}/${review.id}`}>
-                          <Pencil 
-                            className='cursor-pointer hover:text-primary/80' 
-                            aria-label="Edit review"
-                          />
-                        </Link>
-                      </TooltipTrigger>
-                      <TooltipContent side="bottom">
-                        <p>Edit review</p>
-                      </TooltipContent>
-                    </Tooltip>
-                    {/* Delete review */}
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <button aria-label="Delete review">
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Trash 
-                                className="text-red-700 h-6 w-6 transition-all duration-300 ease-in-out hover:text-destructive cursor-pointer"  
-                              />
-                            </TooltipTrigger>
-                            <TooltipContent side="bottom">
-                              <p>Delete review</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </button>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-md">
-                        <DialogHeader>
-                          <DialogTitle className="text-primary">Delete Review</DialogTitle>
-                          <DialogDescription>
-                            Are you sure you want to delete your review? This
-                            action cannot be undone.
-                          </DialogDescription>
-                        </DialogHeader>
-                        <DialogFooter>
-                          <DialogClose asChild>
-                            <Button className="cursor-pointer" variant="outline">Cancel</Button>
-                          </DialogClose>
-                          <Button
-                            className="cursor-pointer bg-red-700 transition-all duration-300 ease-in-out"
-                            onClick={() => handleReviewDeletion(review.id)}
-                            type="button"
-                            variant="destructive"
-                            disabled={isPending}
-                            aria-label="Delete review"
-                          >
-                            {isPending ? "Deleting..." : "Delete Review"}
-                          </Button>
-                        </DialogFooter>
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-                }
-              </li>
-            ))}
-          </ul>
-        </div>    
-        
-        {visibleCount < major.reviews.length && (
-          <div className="mt-8 flex justify-center">
-            <Button
-            size="lg"
-              onClick={() => setVisibleCount((prev) => prev + REVIEWS_PER_VIEW)}
-              className="px-11 py-7 rounded-full bg-primary text-primary-foreground font-semibold transition-all duration-300 ease-in-out hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 cursor-pointer"
-              aria-label="Load more reviews"
-            >
-              Load more reviews
-            </Button>
-          </div>
-        )}
+        <ReviewList 
+          reviews={major.reviews.map(review => ({
+            ...review,
+            majorSlug: major.slug,
+            majorName: major.name
+          }))} 
+        />
 
       </div>
       

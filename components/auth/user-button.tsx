@@ -1,6 +1,6 @@
 'use client';
 import { FaUser } from 'react-icons/fa';
-import { Settings, LogOut } from 'lucide-react';
+import { Settings, LogOut, Star } from 'lucide-react';
 
 import { useCurrentUser } from '@/hooks/use-current-user';
 
@@ -18,6 +18,22 @@ import Link from 'next/link';
 export const UserButton = () => {
   const { user } = useCurrentUser();
 
+  const settingsTab = [
+    {
+      name: "Settings",
+      key: "settings" as const,
+      href: "/settings",
+      icon: Settings,
+    },
+    {
+      name: "Ratings",
+      key: "ratings" as const,
+      href: "/settings/ratings",
+      icon: Star 
+    }
+
+  ]
+
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger>
@@ -29,17 +45,19 @@ export const UserButton = () => {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-40 text-primary " align="start">
-        <Link href="/settings">
-          <DropdownMenuItem className="cursor-pointer text-primary hover:text-primary focus:text-primary">
-            <Settings className="h-8 w-8 mr-2 text-primary hover:text-primary" />
-            Settings
-          </DropdownMenuItem>
-        </Link>
+        {settingsTab.map(({ name, key, href, icon: Icon }) => (
+          <Link href={href} key={key}>
+            <DropdownMenuItem className="cursor-pointer text-primary hover:text-primary focus:text-primary">
+              <Icon className="h-8 w-8 mr-2 text-primary hover:text-primary" />
+              {name}
+            </DropdownMenuItem>
+          </Link>
+        ))}
 
         <DropdownMenuSeparator />
 
         <LogoutButton>
-          <DropdownMenuItem     className="cursor-pointer text-primary hover:text-primary focus:text-primary">
+          <DropdownMenuItem className="cursor-pointer text-primary hover:text-primary focus:text-primary">
             <LogOut className="h-4 w-4 mr-2 text-primary " />
             Logout
           </DropdownMenuItem>
