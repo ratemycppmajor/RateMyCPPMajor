@@ -111,7 +111,7 @@ export default function ReviewList({
 
             {review.userId === currentUserId && 
               <div className={`flex ${isSettings ? 'justify-between' : 'justify-end'}`}>
-                {isSettings && <span>{review.majorName}</span>}
+                {isSettings && <Link href={`/majors/${review.majorSlug}`} className="hover:underline">{review.majorName}</Link>}
                 <div className="flex gap-x-3">
                   {/* Edit review */}
                   {review.majorSlug && (
