@@ -3,6 +3,8 @@
 import { useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { Brain, Briefcase, Smile, Star} from "lucide-react"
+import { toast } from "sonner"
+import { useRouter } from "next/navigation"
 import {
   Label,
   PolarGrid,
@@ -16,7 +18,6 @@ import {
 } from "@/components/ui/chart"
 
 import { MajorWithRelations } from "@/types/major"
-import Link from 'next/link'
 import Image from 'next/image'
 import ReviewList from '@/components/review/ReviewList';
 
@@ -27,6 +28,11 @@ type Props = {
 export default function MajorClient({ major } : Props) {
   useEffect(() => window.document.scrollingElement?.scrollTo(0, 0), [])
   const { data: session } = useSession()
+  const router = useRouter()
+
+  const hasReviewed = !!major.reviews.find(
+    (review) => review.userId === session?.user?.id
+  )
 
   const avgRating = major?.reviews && major.reviews.length > 0
     ? major.reviews.reduce((sum, review) => sum + review.rating, 0) / major.reviews.length
@@ -84,6 +90,20 @@ export default function MajorClient({ major } : Props) {
       icon: Smile
     } 
   ]
+
+  const addReview = () => {
+    if(!session) {
+      router.push("/login")
+      return
+    }
+
+    if(hasReviewed) {
+      toast.error("You have already reviewed this major!")
+      return
+    }
+
+    router.push(`/add/${major.slug}`)
+  }
 
 
   return (
@@ -144,12 +164,12 @@ export default function MajorClient({ major } : Props) {
           }
 
           <div className="mt-5 flex items-center gap-x-6">
-            <Link 
-              href={session ? `/add/${major.slug}` : '/login'} 
-              className="px-6 py-3 rounded-full bg-primary text-primary-foreground font-semibold transition-all duration-300 ease-in-out hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50"
+            <button 
+              onClick={() => addReview()} 
+              className="px-6 py-3 rounded-full bg-primary text-primary-foreground font-semibold transition-all duration-300 ease-in-out hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 cursor-pointer"
             >
               Add Review
-            </Link>
+            </button>
             {major.url && 
               <a
                 href={major.url} 
