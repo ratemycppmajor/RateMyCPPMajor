@@ -58,7 +58,8 @@ model Review {
  
   user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
   major Major @relation(fields: [majorId], references: [id], onDelete: Cascade)
- 
+  
+  @@unique([userId, majorId])
   @@map("reviews")
 }
 

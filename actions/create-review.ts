@@ -28,6 +28,19 @@ export const createReview = async (input: z.infer<typeof ReviewSchema>) => {
     return { error: 'Major not found' };
   }
 
+  const exisitingReview = await db.review.findUnique({
+    where: {
+      userId_majorId: {
+        userId: user.id,
+        majorId: major.id
+      }
+    }
+  })
+
+  if (exisitingReview) {
+    return { error: 'You have already reviewed this major!' };
+  }
+
   const review = await db.review.create({
     data: {
       rating: ratings.major,
