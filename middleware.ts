@@ -4,6 +4,7 @@ import { middlewareAuthConfig } from '@/middleware.config';
 import {
   DEFAULT_LOGIN_REDIRECT,
   apiAuthPrefix,
+  apiPublicPrefix,
   authRoutes,
   publicRoutes,
 } from '@/routes';
@@ -12,11 +13,11 @@ const { auth } = NextAuth(middlewareAuthConfig);
 
 // in the middleware decide what to do with these routes
 export default auth((req) => {
-  // destructure the next url
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
+  const isPublicApiRoute = nextUrl.pathname.startsWith(apiPublicPrefix);
   const isPublicRoute = publicRoutes.some(route => 
     nextUrl.pathname === route || nextUrl.pathname.startsWith(`${route}/`)
   );
@@ -24,6 +25,11 @@ export default auth((req) => {
 
   // Allow API auth routes to pass through
   if (isApiAuthRoute) {
+    return NextResponse.next();
+  }
+
+  // Allow public API routes (like search) to pass through
+  if (isPublicApiRoute) {
     return NextResponse.next();
   }
 

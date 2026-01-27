@@ -31,6 +31,14 @@ export const authRoutes = [
  */
 export const apiAuthPrefix = '/api/auth';
 
+
+/**
+ * The prefix for API public routes
+ * Routes that start with this prefix are used for API public puposes
+ * @type {string}
+ */
+export const apiPublicPrefix = '/api/majors';
+
 /**
  * The default redirect path after loggin in
  * @type {string}
