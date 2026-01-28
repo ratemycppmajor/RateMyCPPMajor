@@ -38,6 +38,11 @@ export type Major = Prisma.MajorModel
  */
 export type Review = Prisma.ReviewModel
 /**
+ * Model ReviewLike
+ * 
+ */
+export type ReviewLike = Prisma.ReviewLikeModel
+/**
  * Model User
  * 
  */
