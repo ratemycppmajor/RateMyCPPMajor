@@ -20,7 +20,20 @@ export default async function Ratings() {
               slug: true,
               name: true
             }
-          }
+          },
+          likes: {
+            where: {
+              userId: user.id,
+            },
+            select: {
+              id: true,
+            },
+          },
+          _count: {
+            select: {
+              likes: true,
+            },
+          },
         },
         orderBy: {
           createdAt: "desc"
