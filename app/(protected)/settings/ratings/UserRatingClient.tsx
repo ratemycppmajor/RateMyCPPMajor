@@ -9,6 +9,8 @@ type Review = {
   comment: string | null
   createdAt: Date
   userId: string
+  likes: { id: string }[]
+  _count: { likes: number }
   major: {
     slug: string
     name: string
@@ -41,6 +43,8 @@ export default function UserRatingClient({ reviews } : Props) {
               comment: review.comment,
               createdAt: review.createdAt,
               userId: review.userId,
+              likeCount: review._count.likes,
+              likedByMe: review.likes.length > 0,
               majorSlug: review.major.slug,
               majorName: review.major.name
             }))} 

@@ -58,9 +58,23 @@ model Review {
  
   user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
   major Major @relation(fields: [majorId], references: [id], onDelete: Cascade)
-  
+  likes ReviewLike[]
+
   @@unique([userId, majorId])
   @@map("reviews")
+}
+
+model ReviewLike {
+  id        String @id @default(cuid())
+  userId    String
+  reviewId  String
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, reviewId])
+  @@map("review_likes")
 }
 
 model User {
@@ -73,6 +87,7 @@ model User {
   password      	 String?
   accounts         Account[]
   reviews       	 Review[]
+  likedReviews     ReviewLike[]
  
   @@map("users")
 }

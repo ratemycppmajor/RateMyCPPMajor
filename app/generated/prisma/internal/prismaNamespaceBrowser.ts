@@ -55,6 +55,7 @@ export const ModelName = {
   Department: 'Department',
   Major: 'Major',
   Review: 'Review',
+  ReviewLike: 'ReviewLike',
   User: 'User',
   Account: 'Account',
   VerificationToken: 'VerificationToken',
@@ -127,6 +128,16 @@ export const ReviewScalarFieldEnum = {
 } as const
 
 export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
+
+
+export const ReviewLikeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  reviewId: 'reviewId',
+  createdAt: 'createdAt'
+} as const
+
+export type ReviewLikeScalarFieldEnum = (typeof ReviewLikeScalarFieldEnum)[keyof typeof ReviewLikeScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
