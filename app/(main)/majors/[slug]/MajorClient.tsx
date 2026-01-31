@@ -92,12 +92,16 @@ export default function MajorClient({ major } : Props) {
   ]
 
   const addReview = () => {
-    if(!session) {
-      router.push("/login")
-      return
+    if (!session?.user) {
+      router.push(`/add/${major.slug}`) // Redirect to login if not authenticated
     }
 
-    if(hasReviewed) {
+    if (!session?.user?.studentVerified) {
+      toast.error('Only CPP students (@cpp.edu) can add reviews.')
+      return
+    }
+    
+    if (hasReviewed) {
       toast.error("You have already reviewed this major!")
       return
     }
@@ -166,6 +170,7 @@ export default function MajorClient({ major } : Props) {
           <div className="mt-5 flex items-center gap-x-6">
             <button 
               onClick={() => addReview()} 
+              title={session && !session.user?.studentVerified ? 'Only CPP students (@cpp.edu) can add reviews' : undefined}
               className="px-6 py-3 rounded-full bg-primary text-primary-foreground font-semibold transition-all duration-300 ease-in-out hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 cursor-pointer"
             >
               Add Review

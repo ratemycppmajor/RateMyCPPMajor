@@ -26,7 +26,13 @@ export default function CardWrapper({
     <Card className="w-[400px] shadow-md">
       <CardHeader className="w-full flex flex-col gap-y-4 items-center justify-center">
         <h1 className="text-3xl font-semibold">{title}</h1>
-        <p className="text-muted-foreground text-sm">{headerLabel}</p>
+        <div>
+          <p className="text-muted-foreground text-sm text-center">{headerLabel}</p>
+          {title === "Get started" && 
+          <span className="text-xs text-muted-foreground">
+            Use a valid <span className="font-semibold text-primary"> @cpp.edu</span> email to create reviews
+          </span>}
+        </div>
       </CardHeader>
 
       <CardContent>{children}</CardContent>

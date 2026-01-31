@@ -172,7 +172,7 @@ export default function ReviewList({
                 type="button"
                 onClick={() => handleLike(review.id)}
                 disabled={isLiking}
-                className="flex items-center gap-2 disabled:opacity-60"
+                className="flex items-center gap-2 cursor-pointer"
                 aria-label={likeState.get(review.id)?.liked ? "Unlike review" : "Like review"}
               >
                 <ThumbsUp

@@ -36,11 +36,13 @@ export const newVerification = async (token: string) => {
     return { error: 'Email does not exist!' };
   }
   // update email in case user wants to modify their email (settings page), simply create a token with that new email and send an email to that email
+  const studentVerified = existingToken.email.toLowerCase().endsWith('@cpp.edu');
   await db.user.update({
     where: { id: existingUser.id },
     data: {
       emailVerified: new Date(),
       email: existingToken.email,
+      studentVerified,
     },
   });
 
