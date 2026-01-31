@@ -32,11 +32,14 @@ export const signup = async (values: z.infer<typeof SignUpSchema>) => {
     return { error: 'Email already in use!' };
   }
 
+  const studentVerified = email.toLowerCase().endsWith('@cpp.edu');
+
   await db.user.create({
     data: {
       name,
       email,
       password: hashedPassword,
+      studentVerified,
     },
   });
   // generate verification token

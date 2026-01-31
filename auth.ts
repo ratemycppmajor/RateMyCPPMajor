@@ -8,6 +8,7 @@ import { getAccountByUserId } from './services/account';
 // helps avoid .role type error
 export type ExtendedUser = DefaultSession['user'] & {
   isOAuth?: boolean; // custom field to check if user is authenticated via OAuth
+  studentVerified?: boolean; // custom field to check if email is @cpp.edu
 };
 
 declare module 'next-auth' {
@@ -65,6 +66,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.name = token.name;
         session.user.email = token.email ?? '';
         session.user.isOAuth = token.isOAuth as boolean;
+        session.user.studentVerified = token.studentVerified as boolean;
       }
 
       return session;
@@ -87,11 +89,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       token.isOAuth = !!existingAccount;
       token.name = existingUser.name;
       token.email = existingUser.email;
+      token.studentVerified = existingUser.studentVerified ?? false;
 
       return token;
     },
   },
-  // @ts-expect-error - PrismaAdapter expects standard PrismaClient type, but we're using custom output path
   // The adapter works at runtime but TypeScript can't verify the type compatibility with custom Prisma client output
   adapter: PrismaAdapter(db),
   session: { strategy: 'jwt' }, // use jwt cause prisma database session not compatible with edge

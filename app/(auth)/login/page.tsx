@@ -55,6 +55,14 @@ const Login = () => {
         setError(data.error);
         setSuccess(data.success);
 
+        if (data.error === "Email does not exist!" || data.error === "Invalid credentials!") {
+          return;
+        }
+
+        if (data.success === "Confirmation email sent!") {
+          return;
+        }
+
         // If server says “ok”, then actually sign in
         await signIn('credentials', {
           redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,

@@ -8,7 +8,6 @@ export const publicRoutes = [
   '/new-verification',
   '/videos/sample.mp4',
   '/majors',
-  '/add',
 ];
 
 /**
@@ -22,6 +21,7 @@ export const authRoutes = [
   '/error',
   '/reset',
   '/new-password',
+  '/add',
 ];
 
 /**
