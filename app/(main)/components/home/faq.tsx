@@ -12,20 +12,24 @@ const faqItems = [
     },
     {
         question: "Does this include all academic major degrees?",
-        answer: "At the moment, we are focusing on undergraduate programs only, so only CPP bachelor's degrees are included."
+        answer: "At the moment, we are focusing on undergraduate programs only, so only CPP bachelor's degrees are included, excluding minor degrees."
     },
     {
         question: "Where was the CPP major average GPA data sourced from?",
         answer: "Through the California Public Records Act (Government Code § 7920 et seq.), it provides the public with the right to inspect and obtain copies of public documents maintained by the CPP University."
     },
     {
-        question: "What academic years does the averga GPA data cover?",
-        answer: "The average GPA data spans from the academic years 2018-2019 to 2024-2025."
+        question: "What academic years does the average GPA data cover?",
+        answer: "The average GPA data spans from the academic years 2018-2019 to 2024-2025 for freshman, sophomore, junior, and senior students."
     },
     {
-        question: "Why can't find the major I'm looking for?",
+        question: "Why can't I find the major I'm looking for?",
         answer: "The major may have been discontinued or it is not an undergraduate program."
     },
+    {
+        question: "Why is there no average GPA data for certain majors?",
+        answer: "The average GPA data was not provided for those majors in the public records obtained from CPP University"
+    }
 ]
 
 const Faq = () => {

@@ -94,6 +94,11 @@ const Settings = () => {
     <div className="flex items-center justify-center w-full max-w-2xl">
       <div className="w-full h-full p-6 mx-8">
         <div>
+          {!user?.studentVerified && (
+            <div className="mb-6 text-sm text-green-600 text-center">
+              Update your email to a CPP student email to create reviews.
+            </div>
+          )}
           <Form {...form}>
             <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
               <div className="space-y-4">
