@@ -78,17 +78,19 @@ model ReviewLike {
 }
 
 model User {
-  id            	 String    @id @default(cuid())
-  name          	 String?
-  email		 String?   @unique
-  emailVerified DateTime? @map("email_verified")
-  studentVerified Boolean   @default(false) @map("student_verified")
-  image         	 String?
-  password      	 String?
-  accounts         Account[]
-  reviews       	 Review[]
-  likedReviews     ReviewLike[]
- 
+  id                String    @id @default(cuid())
+  name              String?
+  email             String?   @unique
+  emailVerified     DateTime? @map("email_verified")
+  studentVerified   Boolean   @default(false) @map("student_verified")
+  cppEmail          String?   @map("cpp_email")
+  cppEmailVerified  DateTime? @map("cpp_email_verified")
+  image             String?
+  password          String?
+  accounts          Account[]
+  reviews           Review[]
+  likedReviews      ReviewLike[]
+
   @@map("users")
 }
 
@@ -115,10 +117,12 @@ model Account {
 }
 
 model VerificationToken {
-  id String @id @default(cuid())
-  email String
-  token String @unique
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
   expires DateTime
+  userId  String?  @map("user_id")
+  purpose String?  // 'primary_email' = change primary email, 'cpp_email' = add CPP student email, null = signup
 
   @@unique([email, token])
 }
