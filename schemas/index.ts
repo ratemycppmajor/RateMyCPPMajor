@@ -1,11 +1,33 @@
 import * as z from 'zod';
 
+const cppEmailSchema = z
+  .string()
+  .email()
+  .refine((email) => email.toLowerCase().endsWith('@cpp.edu'), {
+    message: 'Must be a CPP student email (@cpp.edu)',
+  });
+
+// Empty string = "not provided" so users can change email/name without filling CPP email
+const optionalCppEmail = z.optional(
+  z.union([z.literal(''), cppEmailSchema]).transform((val) =>
+    val === '' ? undefined : val
+  )
+);
+
+// Empty string = "not provided" so OAuth users (who don't see password fields) can submit
+const optionalPassword = z.optional(
+  z.union([z.literal(''), z.string().min(6)]).transform((val) =>
+    val === '' ? undefined : val
+  )
+);
+
 export const SettingsSchema = z
   .object({
     name: z.optional(z.string()),
     email: z.optional(z.string().email()),
-    password: z.optional(z.string().min(6)),
-    newPassword: z.optional(z.string().min(6)),
+    cppEmail: optionalCppEmail,
+    password: optionalPassword,
+    newPassword: optionalPassword,
   })
   .refine(
     (data) => {
