@@ -7,6 +7,10 @@ import {
 
 const faqItems = [
     {
+        question: "Is this affiliated with Cal Poly Pomona University?",
+        answer: "This project is not affiliated with or endorsed by California State Polytechnic University, Pomona in any way."
+    },
+    {
         question: "How was the list of CPP majors compiled?",
         answer: "It was scraped from here: https://www.cpp.edu/programs/index.shtml?programType=Bachelor."
     },
