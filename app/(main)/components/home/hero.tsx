@@ -178,7 +178,7 @@ const Hero = () => {
               block
             "
           >
-            <source src="/videos/sample.mp4" type="video/mp4" />
+            <source src="/videos/demo.mp4" type="video/mp4" />
           </video>
         </div>
 
