@@ -1185,6 +1185,8 @@ export const UserScalarFieldEnum = {
   email: 'email',
   emailVerified: 'emailVerified',
   studentVerified: 'studentVerified',
+  cppEmail: 'cppEmail',
+  cppEmailVerified: 'cppEmailVerified',
   image: 'image',
   password: 'password'
 } as const
@@ -1214,7 +1216,9 @@ export const VerificationTokenScalarFieldEnum = {
   id: 'id',
   email: 'email',
   token: 'token',
-  expires: 'expires'
+  expires: 'expires',
+  userId: 'userId',
+  purpose: 'purpose'
 } as const
 
 export type VerificationTokenScalarFieldEnum = (typeof VerificationTokenScalarFieldEnum)[keyof typeof VerificationTokenScalarFieldEnum]

@@ -8,7 +8,8 @@ import { getAccountByUserId } from './services/account';
 // helps avoid .role type error
 export type ExtendedUser = DefaultSession['user'] & {
   isOAuth?: boolean; // custom field to check if user is authenticated via OAuth
-  studentVerified?: boolean; // custom field to check if email is @cpp.edu
+  studentVerified?: boolean; // custom field to check if primary email or verified cppEmail is @cpp.edu is true
+  cppEmail?: string | null; // optional verified CPP student email (OAuth users can add without replacing primary email)
 };
 
 declare module 'next-auth' {
@@ -67,6 +68,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.email = token.email ?? '';
         session.user.isOAuth = token.isOAuth as boolean;
         session.user.studentVerified = token.studentVerified as boolean;
+        session.user.cppEmail = (token.cppEmail as string) ?? null;
       }
 
       return session;
@@ -90,6 +92,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       token.name = existingUser.name;
       token.email = existingUser.email;
       token.studentVerified = existingUser.studentVerified ?? false;
+      token.cppEmail = existingUser.cppEmail ?? null;
 
       return token;
     },
