@@ -29,6 +29,47 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
     values.password = undefined;
     values.newPassword = undefined;
   }
+  
+  // CPP email verification: add a @cpp.edu email to gain studentVerified (keeps OAuth/primary email unchanged)
+  if (values.cppEmail) {
+    const cppEmailLower = values.cppEmail.toLowerCase();
+
+    // Already have this CPP email verified — don't send another verification; allow other updates
+    if (dbUser.cppEmail === cppEmailLower && dbUser.cppEmailVerified) {
+      values.cppEmail = undefined;
+    } 
+    else {
+      const existingByEmail = await getUserByEmail(cppEmailLower);
+
+      if (existingByEmail && existingByEmail.id !== user.id) {
+        return { error: 'This CPP email is already in use by another account!' };
+      }
+
+      const existingByCppEmail = await db.user.findFirst({
+        where: {
+          cppEmail: cppEmailLower,
+          id: { not: user.id },
+        },
+      });
+
+      if (existingByCppEmail) {
+        return { error: 'This CPP email is already in use by another account!' };
+      }
+
+      const verificationToken = await generateVerificationToken(
+        cppEmailLower,
+        user.id,
+        'cpp_email'
+      );
+
+      await sendVerificationEmail(
+        verificationToken.email,
+        verificationToken.token,
+      );
+      
+      return { success: 'Verification email sent to your CPP email!' };
+    }
+  }
 
   if (values.email && values.email !== user.email) {
     // ensure the email is not already in use by another user
@@ -38,7 +79,11 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
       return { error: 'Email already in use!' };
     }
 
-    const verificationToken = await generateVerificationToken(values.email);
+    const verificationToken = await generateVerificationToken(
+      values.email,
+      user.id,
+      'primary_email'
+    );
 
     await sendVerificationEmail(
       verificationToken.email,
@@ -65,10 +110,13 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
     values.newPassword = undefined;
   }
 
+  // Don't send cppEmail to DB here; it's set only after verification in newVerification
+  const { cppEmail: _cppEmail, ...updateData } = values;
+
   await db.user.update({
     where: { id: dbUser.id },
     data: {
-      ...values,
+      ...updateData,
     },
   });
 

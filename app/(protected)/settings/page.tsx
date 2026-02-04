@@ -43,10 +43,11 @@ const Settings = () => {
   const form = useForm<z.infer<typeof SettingsSchema>>({
     resolver: zodResolver(SettingsSchema),
     defaultValues: {
-      password: '', // not gonna fill because we don't have the user's password(only hash)
+      password: '',
       newPassword: '',
       name: '',
       email: '',
+      cppEmail: '',
     },
   });
 
@@ -58,11 +59,14 @@ const Settings = () => {
         newPassword: '',
         name: user.name || '',
         email: user.email || '',
+        cppEmail: user.cppEmail || '',
       });
     }
   }, [user, form]);
 
   const onSubmit = (values: z.infer<typeof SettingsSchema>) => {
+    setError(undefined);
+    setSuccess(undefined);
     startTransition(() => {
       settings(values).then((data) => {
         if (data.error) {
@@ -96,7 +100,9 @@ const Settings = () => {
         <div>
           {!user?.studentVerified && (
             <div className="mb-6 text-sm text-green-600 text-center">
-              Update your email to a CPP student email to create reviews.
+              {user?.isOAuth
+                ? 'Add your CPP student email (@cpp.edu) below to verify and create reviews.'
+                : 'Update your email to a CPP student email, or add a CPP email below, to create reviews.'}
             </div>
           )}
           <Form {...form}>
@@ -119,6 +125,35 @@ const Settings = () => {
                     </FormItem>
                   )}
                 />
+
+                {/* CPP email: OAuth users can add @cpp.edu to get studentVerified without replacing their OAuth email */}
+                {(!user?.studentVerified || user?.cppEmail) && (
+                  <FormField
+                    control={form.control}
+                    name="cppEmail"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          CPP Student Email (@cpp.edu)
+                          {user?.cppEmail && (
+                            <span className="ml-2 text-xs font-normal text-muted-foreground">
+                              (verified)
+                            </span>
+                          )}
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder="you@cpp.edu"
+                            type="email"
+                            disabled={isPending || !!user?.cppEmail}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
 
                 {user?.isOAuth === false && (
                   <>
