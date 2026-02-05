@@ -1,4 +1,5 @@
 import { db } from '@/lib/db';
+import type { PasswordResetToken } from '@/app/generated/prisma/client';
 
 /**
  * Fetches the password reset token record from the database using the token string.
@@ -6,7 +7,9 @@ import { db } from '@/lib/db';
  * @param token - The password reset token to look up.
  * @returns The password reset token record if found, otherwise null.
  */
-export const getPasswordResetToken = async (token: string) => {
+export const getPasswordResetToken = async (
+  token: string,
+): Promise<PasswordResetToken | null> => {
   try {
     const passwordResetToken = await db.passwordResetToken.findUnique({
       where: { token },
@@ -14,6 +17,7 @@ export const getPasswordResetToken = async (token: string) => {
 
     return passwordResetToken;
   } catch (error) {
+    console.error(error);
     return null;
   }
 };
@@ -24,7 +28,9 @@ export const getPasswordResetToken = async (token: string) => {
  * @param email - The email address to look up a password reset token for.
  * @returns The password reset token record if found, otherwise null.
  */
-export const getPasswordResetTokenByEmail = async (email: string) => {
+export const getPasswordResetTokenByEmail = async (
+  email: string,
+): Promise<PasswordResetToken | null> => {
   try {
     const passwordResetToken = await db.passwordResetToken.findFirst({
       where: { email },
@@ -32,6 +38,7 @@ export const getPasswordResetTokenByEmail = async (email: string) => {
 
     return passwordResetToken;
   } catch (error) {
+    console.error(error);
     return null;
   }
 };
