@@ -29,7 +29,7 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
     values.password = undefined;
     values.newPassword = undefined;
   }
-  
+
   // CPP email verification: add a @cpp.edu email to gain studentVerified (keeps OAuth/primary email unchanged)
   if (values.cppEmail) {
     const cppEmailLower = values.cppEmail.toLowerCase();
@@ -37,12 +37,13 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
     // Already have this CPP email verified — don't send another verification; allow other updates
     if (dbUser.cppEmail === cppEmailLower && dbUser.cppEmailVerified) {
       values.cppEmail = undefined;
-    } 
-    else {
+    } else {
       const existingByEmail = await getUserByEmail(cppEmailLower);
 
       if (existingByEmail && existingByEmail.id !== user.id) {
-        return { error: 'This CPP email is already in use by another account!' };
+        return {
+          error: 'This CPP email is already in use by another account!',
+        };
       }
 
       const existingByCppEmail = await db.user.findFirst({
@@ -53,20 +54,22 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
       });
 
       if (existingByCppEmail) {
-        return { error: 'This CPP email is already in use by another account!' };
+        return {
+          error: 'This CPP email is already in use by another account!',
+        };
       }
 
       const verificationToken = await generateVerificationToken(
         cppEmailLower,
         user.id,
-        'cpp_email'
+        'cpp_email',
       );
 
       await sendVerificationEmail(
         verificationToken.email,
         verificationToken.token,
       );
-      
+
       return { success: 'Verification email sent to your CPP email!' };
     }
   }
@@ -82,7 +85,7 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
     const verificationToken = await generateVerificationToken(
       values.email,
       user.id,
-      'primary_email'
+      'primary_email',
     );
 
     await sendVerificationEmail(

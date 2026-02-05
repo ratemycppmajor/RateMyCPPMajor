@@ -32,10 +32,10 @@ export const createReview = async (input: z.infer<typeof ReviewSchema>) => {
     where: {
       userId_majorId: {
         userId: user.id,
-        majorId: major.id
-      }
-    }
-  })
+        majorId: major.id,
+      },
+    },
+  });
 
   if (exisitingReview) {
     return { error: 'You have already reviewed this major!' };
@@ -54,4 +54,4 @@ export const createReview = async (input: z.infer<typeof ReviewSchema>) => {
   });
 
   return { success: true, review };
-}
+};

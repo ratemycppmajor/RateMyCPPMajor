@@ -18,7 +18,7 @@ export type VerificationPurpose = 'primary_email' | 'cpp_email';
 export const generateVerificationToken = async (
   email: string,
   userId?: string,
-  purpose?: VerificationPurpose
+  purpose?: VerificationPurpose,
 ) => {
   const token = uuidv4();
   const expires = new Date(new Date().getTime() + 3600 * 1000); // expires in 1 hr
@@ -32,7 +32,7 @@ export const generateVerificationToken = async (
       },
     });
   }
-  
+
   const verificationToken = await db.verificationToken.create({
     data: {
       email,

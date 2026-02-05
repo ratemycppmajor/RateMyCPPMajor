@@ -27,11 +27,16 @@ export default function CardWrapper({
       <CardHeader className="w-full flex flex-col gap-y-4 items-center justify-center">
         <h1 className="text-3xl font-semibold">{title}</h1>
         <div>
-          <p className="text-muted-foreground text-sm text-center">{headerLabel}</p>
-          {title === "Get started" && 
-          <span className="text-xs text-muted-foreground">
-            Use a valid <span className="font-semibold text-primary"> @cpp.edu</span> email to create reviews
-          </span>}
+          <p className="text-muted-foreground text-sm text-center">
+            {headerLabel}
+          </p>
+          {title === 'Get started' && (
+            <span className="text-xs text-muted-foreground">
+              Use a valid{' '}
+              <span className="font-semibold text-primary"> @cpp.edu</span>{' '}
+              email to create reviews
+            </span>
+          )}
         </div>
       </CardHeader>
 
@@ -42,7 +47,7 @@ export default function CardWrapper({
           <Social />
         </CardFooter>
       )}
-      
+
       <CardFooter>
         <Button variant="link" className="font-normal w-full text-xs" size="sm">
           <Link href={backButtonHref}>{backButtonLabel}</Link>

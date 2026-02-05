@@ -1,114 +1,117 @@
-'use client'
+'use client';
 
-import { useEffect } from 'react'
-import { useSession } from 'next-auth/react'
-import { Brain, Briefcase, Smile, Star} from "lucide-react"
-import { toast } from "sonner"
-import { useRouter } from "next/navigation"
+import { useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import { Brain, Briefcase, Smile, Star } from 'lucide-react';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 import {
   Label,
   PolarGrid,
   PolarRadiusAxis,
   RadialBar,
   RadialBarChart,
-} from "recharts"
-import {
-  ChartContainer,
-  type ChartConfig,
-} from "@/components/ui/chart"
+} from 'recharts';
+import { ChartContainer, type ChartConfig } from '@/components/ui/chart';
 
-import { MajorWithRelations } from "@/types/major"
-import Image from 'next/image'
+import { MajorWithRelations } from '@/types/major';
+import Image from 'next/image';
 import ReviewList from '@/components/review/ReviewList';
 
 type Props = {
-    major: MajorWithRelations;
-}
+  major: MajorWithRelations;
+};
 
-export default function MajorClient({ major } : Props) {
-  useEffect(() => window.document.scrollingElement?.scrollTo(0, 0), [])
-  const { data: session } = useSession()
-  const router = useRouter()
+export default function MajorClient({ major }: Props) {
+  useEffect(() => window.document.scrollingElement?.scrollTo(0, 0), []);
+  const { data: session } = useSession();
+  const router = useRouter();
 
   const hasReviewed = !!major.reviews.find(
-    (review) => review.userId === session?.user?.id
-  )
+    (review) => review.userId === session?.user?.id,
+  );
 
-  const avgRating = major?.reviews && major.reviews.length > 0
-    ? major.reviews.reduce((sum, review) => sum + review.rating, 0) / major.reviews.length
-    : null
- 
-  const avgCareerReadiness = major?.reviews && major.reviews.length > 0
-    ? major.reviews.reduce((sum, review) => sum + review.careerReadiness, 0) / major.reviews.length
-    : null
- 
-  const avgDifficulty = major?.reviews && major.reviews.length > 0
-    ? major.reviews.reduce((sum, review) => sum + review.difficulty, 0) / major.reviews.length
-    : null
- 
-  const avgSatisfaction = major?.reviews && major.reviews.length > 0
-    ? major.reviews.reduce((sum, review) => sum + review.satisfaction, 0) / major.reviews.length
-    : null
+  const avgRating =
+    major?.reviews && major.reviews.length > 0
+      ? major.reviews.reduce((sum, review) => sum + review.rating, 0) /
+        major.reviews.length
+      : null;
 
-  const MAX_GPA = 4.0
-  const rawGPA = major.averageGpa ?? null
-  const fillAngle = rawGPA != null ? (rawGPA / MAX_GPA) * 360 : 0
+  const avgCareerReadiness =
+    major?.reviews && major.reviews.length > 0
+      ? major.reviews.reduce((sum, review) => sum + review.careerReadiness, 0) /
+        major.reviews.length
+      : null;
+
+  const avgDifficulty =
+    major?.reviews && major.reviews.length > 0
+      ? major.reviews.reduce((sum, review) => sum + review.difficulty, 0) /
+        major.reviews.length
+      : null;
+
+  const avgSatisfaction =
+    major?.reviews && major.reviews.length > 0
+      ? major.reviews.reduce((sum, review) => sum + review.satisfaction, 0) /
+        major.reviews.length
+      : null;
+
+  const MAX_GPA = 4.0;
+  const rawGPA = major.averageGpa ?? null;
+  const fillAngle = rawGPA != null ? (rawGPA / MAX_GPA) * 360 : 0;
 
   const chartData = [
     {
       gpa: 100,
       rawGpa: rawGPA,
-      fill: "var(--color-gpa)", 
-
+      fill: 'var(--color-gpa)',
     },
-  ]
+  ];
 
   const chartConfig = {
     gpa: {
-      label: "GPA",
-      color: "var(--chart-2)",
+      label: 'GPA',
+      color: 'var(--chart-2)',
     },
-  } satisfies ChartConfig
+  } satisfies ChartConfig;
 
   const ratingOptions = [
     {
-      name: "Career Readiness",
-      key: "careerReadiness" as const,
+      name: 'Career Readiness',
+      key: 'careerReadiness' as const,
       value: avgCareerReadiness,
-      icon: Briefcase
+      icon: Briefcase,
     },
     {
-      name: "Difficulty",
-      key: "difficulty" as const,
+      name: 'Difficulty',
+      key: 'difficulty' as const,
       value: avgDifficulty,
       icon: Brain,
     },
     {
-      name: "Satisfaction",
-      key: "satisfaction",
+      name: 'Satisfaction',
+      key: 'satisfaction',
       value: avgSatisfaction,
-      icon: Smile
-    } 
-  ]
+      icon: Smile,
+    },
+  ];
 
   const addReview = () => {
     if (!session?.user) {
-      router.push(`/add/${major.slug}`) // Redirect to login if not authenticated
+      router.push(`/add/${major.slug}`); // Redirect to login if not authenticated
     }
 
     if (!session?.user?.studentVerified) {
-      toast.error('Only CPP students (@cpp.edu) can add reviews.')
-      return
+      toast.error('Only CPP students (@cpp.edu) can add reviews.');
+      return;
     }
-    
+
     if (hasReviewed) {
-      toast.error("You have already reviewed this major!")
-      return
+      toast.error('You have already reviewed this major!');
+      return;
     }
 
-    router.push(`/add/${major.slug}`)
-  }
-
+    router.push(`/add/${major.slug}`);
+  };
 
   return (
     <div className="mx-auto max-w-7xl px-8">
@@ -123,70 +126,78 @@ export default function MajorClient({ major } : Props) {
             <span>{major.department.name}</span>
           </div>
 
-          {avgRating !== null ? 
-          (
+          {avgRating !== null ? (
             <div className="mt-6 inline-flex flex-col gap-2 rounded-lg border bg-card p-4">
-              <div className="text-sm font-medium text-muted-foreground">Average Rating</div>
+              <div className="text-sm font-medium text-muted-foreground">
+                Average Rating
+              </div>
               <div className="flex items-center gap-3">
                 <div className="text-4xl font-bold">{avgRating}</div>
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-0.5">
                     {Array.from({ length: 5 }).map((_, i) => {
-                      const filled = i < Math.floor(avgRating)
+                      const filled = i < Math.floor(avgRating);
 
                       return (
                         <Star
                           key={i}
                           className={`h-5 w-5 ${
                             filled
-                              ? "fill-amber-400 text-amber-400"
-                              : "fill-muted text-muted-foreground/40"
+                              ? 'fill-amber-400 text-amber-400'
+                              : 'fill-muted text-muted-foreground/40'
                           }`}
                         />
-                      )
+                      );
                     })}
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    Based on {major.reviews.length} {major.reviews.length === 1 ? "review" : "reviews"}
+                    Based on {major.reviews.length}{' '}
+                    {major.reviews.length === 1 ? 'review' : 'reviews'}
                   </div>
                 </div>
               </div>
             </div>
-          )
-           :
-           <div className="mt-6 inline-flex flex-col gap-2 rounded-lg border bg-card p-4">
-              <div className="text-sm font-medium text-muted-foreground">Average Rating</div>
+          ) : (
+            <div className="mt-6 inline-flex flex-col gap-2 rounded-lg border bg-card p-4">
+              <div className="text-sm font-medium text-muted-foreground">
+                Average Rating
+              </div>
               <div className="flex items-center gap-3">
                 <div className="text-4xl font-bold">N/A</div>
                 <div className="flex flex-col gap-1">
                   <div className="text-xs text-muted-foreground">
-                    Based on {major.reviews.length} {major.reviews.length === 1 ? "review" : "reviews"}
+                    Based on {major.reviews.length}{' '}
+                    {major.reviews.length === 1 ? 'review' : 'reviews'}
                   </div>
                 </div>
               </div>
             </div>
-          }
+          )}
 
           <div className="mt-5 flex items-center gap-x-6">
-            <button 
-              onClick={() => addReview()} 
-              title={session && !session.user?.studentVerified ? 'Only CPP students (@cpp.edu) can add reviews' : undefined}
+            <button
+              onClick={() => addReview()}
+              title={
+                session && !session.user?.studentVerified
+                  ? 'Only CPP students (@cpp.edu) can add reviews'
+                  : undefined
+              }
               className="px-6 py-3 rounded-full bg-primary text-primary-foreground font-semibold transition-all duration-300 ease-in-out hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 cursor-pointer"
             >
               Add Review
             </button>
-            {major.url && 
+            {major.url && (
               <a
-                href={major.url} 
-                target="_blank" 
+                href={major.url}
+                target="_blank"
                 className="text-sm font-semibold leading-6 block hover:underline hover:underline-offset-2"
               >
                 Learn more <span aria-hidden="true">→</span>
               </a>
-            }
+            )}
           </div>
         </section>
-        
+
         {/* Rating options */}
         <div className="relative h-[400px] rounded-2xl border-4 border-primary overflow-hidden mt-12 lg:mt-0">
           {major.imgSrc && (
@@ -199,7 +210,7 @@ export default function MajorClient({ major } : Props) {
               priority
             />
           )}
-          <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/35 to-transparent"/>
+          <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/35 to-transparent" />
 
           <div className="relative h-full flex items-end p-8">
             <ul className="flex flex-col gap-4 w-full">
@@ -212,18 +223,18 @@ export default function MajorClient({ major } : Props) {
                   {value !== null ? (
                     <div className="flex items-center gap-0.5 pl-7 mt-1">
                       {Array.from({ length: 5 }).map((_, i) => {
-                        const filled = i < Math.round(value)
+                        const filled = i < Math.round(value);
 
                         return (
                           <Star
                             key={i}
                             className={`h-4 w-4 ${
-                            filled
-                              ? "fill-amber-400 text-amber-400"
-                              : "fill-muted text-muted-foreground/40"
-                          }`}
+                              filled
+                                ? 'fill-amber-400 text-amber-400'
+                                : 'fill-muted text-muted-foreground/40'
+                            }`}
                           />
-                        )
+                        );
                       })}
                     </div>
                   ) : (
@@ -240,10 +251,12 @@ export default function MajorClient({ major } : Props) {
       <div className="grid lg:grid-cols-2 grid-rows-1 items-center gap-12 pb-20">
         {/* About section */}
         <section>
-          <h2 className="text-lg lg:text-xl uppercase font-semibold mb-4">About the major</h2>
+          <h2 className="text-lg lg:text-xl uppercase font-semibold mb-4">
+            About the major
+          </h2>
           <p className="text-lg lg:text-xl text-black">{major.description}</p>
         </section>
-        
+
         {/* Average GPA */}
         <div className="flex flex-col">
           <div className="flex-1 pb-0">
@@ -269,7 +282,7 @@ export default function MajorClient({ major } : Props) {
                 <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
                   <Label
                     content={({ viewBox }) => {
-                      if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                      if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
                         return (
                           <text
                             x={viewBox.cx}
@@ -282,7 +295,9 @@ export default function MajorClient({ major } : Props) {
                               y={viewBox.cy}
                               className="fill-foreground text-4xl font-bold"
                             >
-                              {chartData[0].rawGpa != null ? chartData[0].rawGpa : "N/A"}
+                              {chartData[0].rawGpa != null
+                                ? chartData[0].rawGpa
+                                : 'N/A'}
                             </tspan>
                             <tspan
                               x={viewBox.cx}
@@ -292,7 +307,7 @@ export default function MajorClient({ major } : Props) {
                               Avg. GPA
                             </tspan>
                           </text>
-                        )
+                        );
                       }
                     }}
                   />
@@ -310,28 +325,27 @@ export default function MajorClient({ major } : Props) {
           </div>
         </div>
       </div>
-      
+
       {/* Third Section */}
       <div className="pb-20">
         {/* Review list */}
         <div className="text-sm mt-4">
-          <span className="text-lg lg:text-xl font-semibold">{major.reviews.length} Student Reviews</span>  
-          <hr className='border-black/30 mt-3'/>
-        </div>  
+          <span className="text-lg lg:text-xl font-semibold">
+            {major.reviews.length} Student Reviews
+          </span>
+          <hr className="border-black/30 mt-3" />
+        </div>
 
-        <ReviewList 
-          reviews={major.reviews.map(review => ({
+        <ReviewList
+          reviews={major.reviews.map((review) => ({
             ...review,
             likeCount: review._count.likes,
             likedByMe: review.likes.length > 0,
             majorSlug: major.slug,
-            majorName: major.name
-          }))} 
+            majorName: major.name,
+          }))}
         />
-
       </div>
-      
-      
     </div>
-  )
+  );
 }

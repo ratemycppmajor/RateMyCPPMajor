@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -13,7 +13,7 @@ export default function SettingsNavbar() {
 
   return (
     <div className="px-5 border-2 rounded-md flex gap-4">
-      {navItems.map((nav) => {             
+      {navItems.map((nav) => {
         const isActive = pathname === nav.href;
         return (
           <Link
@@ -22,9 +22,9 @@ export default function SettingsNavbar() {
             className={`px-3 py-2 rounded-md text-base font-medium transition hover:text-primary hover:underline-offset-13 ${isActive && 'underline underline-offset-13 text-primary'}`}
           >
             {nav.name}
-          </Link>  
-        )                
+          </Link>
+        );
       })}
-    </div> 
-  )
+    </div>
+  );
 }

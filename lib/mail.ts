@@ -47,5 +47,6 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
       variables: {
         resetLink: resetLink,
       },
-    },  });
+    },
+  });
 };

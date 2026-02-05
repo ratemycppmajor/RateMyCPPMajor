@@ -4,7 +4,11 @@ import { notFound } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
 import ReviewClient from '@/components/review/ReviewClient';
 
-export default async function EditReview({ params } : {params : Promise<{ reviewId: string }>}) {
+export default async function EditReview({
+  params,
+}: {
+  params: Promise<{ reviewId: string }>;
+}) {
   const { reviewId } = await params;
   const user = await currentUser();
 
@@ -32,22 +36,20 @@ export default async function EditReview({ params } : {params : Promise<{ review
               college: {
                 select: {
                   name: true,
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   });
 
   if (!review || review.userId !== user.id) {
     notFound();
   }
 
-  const major : AddReviewWithRelations = review.major;
+  const major: AddReviewWithRelations = review.major;
 
-  return (
-    <ReviewClient major={major} review={review} />
-  )
+  return <ReviewClient major={major} review={review} />;
 }

@@ -59,7 +59,9 @@ export const newVerification = async (token: string) => {
 
   // Primary email change: token was created with userId + purpose 'primary_email' in settings, used for in case user is changing their primary email to CPP email
   if (existingToken.purpose === 'primary_email' && user) {
-    const newEmailIsCpp = existingToken.email.toLowerCase().endsWith('@cpp.edu');
+    const newEmailIsCpp = existingToken.email
+      .toLowerCase()
+      .endsWith('@cpp.edu');
 
     const existingUser = await db.user.findUnique({
       where: { id: existingToken.userId! },
@@ -79,7 +81,7 @@ export const newVerification = async (token: string) => {
         studentVerified,
       },
     });
-    
+
     await db.verificationToken.delete({
       where: { id: existingToken.id },
     });
@@ -93,7 +95,9 @@ export const newVerification = async (token: string) => {
     return { error: 'Email does not exist!' };
   }
 
-  const studentVerified = existingToken.email.toLowerCase().endsWith('@cpp.edu');
+  const studentVerified = existingToken.email
+    .toLowerCase()
+    .endsWith('@cpp.edu');
 
   await db.user.update({
     where: { id: existingUser.id },

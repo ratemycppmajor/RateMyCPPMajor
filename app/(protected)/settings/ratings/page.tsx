@@ -18,8 +18,8 @@ export default async function Ratings() {
           major: {
             select: {
               slug: true,
-              name: true
-            }
+              name: true,
+            },
           },
           likes: {
             where: {
@@ -36,15 +36,13 @@ export default async function Ratings() {
           },
         },
         orderBy: {
-          createdAt: "desc"
-        }
-      }
-    }
+          createdAt: 'desc',
+        },
+      },
+    },
   });
 
   const userReviews = userData?.reviews || [];
 
-  return (
-    <UserRatingClient reviews={userReviews} />
-  )
+  return <UserRatingClient reviews={userReviews} />;
 }

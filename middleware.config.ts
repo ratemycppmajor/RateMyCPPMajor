@@ -8,4 +8,3 @@ export const middlewareAuthConfig = {
   secret: process.env.AUTH_SECRET,
   providers: [], // Providers aren't needed in middleware - only JWT verification happens
 } satisfies NextAuthConfig;
-

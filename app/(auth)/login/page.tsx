@@ -55,11 +55,14 @@ const Login = () => {
         setError(data.error);
         setSuccess(data.success);
 
-        if (data.error === "Email does not exist!" || data.error === "Invalid credentials!") {
+        if (
+          data.error === 'Email does not exist!' ||
+          data.error === 'Invalid credentials!'
+        ) {
           return;
         }
 
-        if (data.success === "Confirmation email sent!") {
+        if (data.success === 'Confirmation email sent!') {
           return;
         }
 
@@ -134,7 +137,11 @@ const Login = () => {
           <FormError message={error || urlError} />
           <FormSuccess message={success} />
 
-          <Button disabled={isPending} type="submit" className="w-full cursor-pointer">
+          <Button
+            disabled={isPending}
+            type="submit"
+            className="w-full cursor-pointer"
+          >
             Login
           </Button>
         </form>

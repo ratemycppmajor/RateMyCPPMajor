@@ -20,19 +20,18 @@ export const UserButton = () => {
 
   const settingsTab = [
     {
-      name: "Settings",
-      key: "settings" as const,
-      href: "/settings",
+      name: 'Settings',
+      key: 'settings' as const,
+      href: '/settings',
       icon: Settings,
     },
     {
-      name: "Ratings",
-      key: "ratings" as const,
-      href: "/settings/ratings",
-      icon: Star 
-    }
-
-  ]
+      name: 'Ratings',
+      key: 'ratings' as const,
+      href: '/settings/ratings',
+      icon: Star,
+    },
+  ];
 
   return (
     <DropdownMenu modal={false}>

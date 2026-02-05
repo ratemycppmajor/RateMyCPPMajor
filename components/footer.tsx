@@ -6,7 +6,8 @@ export default function Footer() {
           © {new Date().getFullYear()} RateMyCPPMajor.
         </p>
         <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
-          Not affiliated or endorsed by Cal Poly Pomona University or California State University. 100% Student run project.
+          Not affiliated or endorsed by Cal Poly Pomona University or California
+          State University. 100% Student run project.
         </p>
       </div>
     </footer>
