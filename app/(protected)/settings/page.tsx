@@ -217,13 +217,21 @@ const Settings = () => {
               <FormError message={error} />
               <FormSuccess message={success} />
               <div className="flex justify-between">
-                <Button className="cursor-pointer" disabled={isPending} type="submit">
+                <Button
+                  className="cursor-pointer"
+                  disabled={isPending}
+                  type="submit"
+                >
                   Save
                 </Button>
 
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button className="cursor-pointer" type="button" variant="destructive">
+                    <Button
+                      className="cursor-pointer"
+                      type="button"
+                      variant="destructive"
+                    >
                       Delete Account
                     </Button>
                   </DialogTrigger>
@@ -237,7 +245,9 @@ const Settings = () => {
                     </DialogHeader>
                     <DialogFooter>
                       <DialogClose asChild>
-                        <Button className="cursor-pointer" variant="outline">Cancel</Button>
+                        <Button className="cursor-pointer" variant="outline">
+                          Cancel
+                        </Button>
                       </DialogClose>
                       <Button
                         className="cursor-pointer"

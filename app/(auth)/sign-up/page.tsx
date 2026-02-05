@@ -121,7 +121,11 @@ const SignUp = () => {
           <FormError message={error} />
           <FormSuccess message={success} />
 
-          <Button disabled={isPending} type="submit" className="w-full cursor-pointer">
+          <Button
+            disabled={isPending}
+            type="submit"
+            className="w-full cursor-pointer"
+          >
             Sign Up
           </Button>
         </form>

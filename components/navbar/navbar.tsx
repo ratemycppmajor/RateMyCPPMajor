@@ -78,8 +78,10 @@ export default function Navbar({ home = false }: NavbarProps) {
     setIsSearching(true);
 
     try {
-      const res = await fetch(`/api/majors/search?q=${encodeURIComponent(query)}`);
-      
+      const res = await fetch(
+        `/api/majors/search?q=${encodeURIComponent(query)}`,
+      );
+
       if (res.ok) {
         const data = await res.json();
         setSearchResults(data.majors || []);
@@ -129,181 +131,192 @@ export default function Navbar({ home = false }: NavbarProps) {
 
   return (
     <header className={headerClassName}>
-        <nav className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8`}>
-            <div className="flex items-center justify-between h-16">
-                <div className="md:hidden">
-                    <button
-                        className="md:hidden transition-transform duration-300 hover:scale-110 cursor-pointer"
-                        onClick={() => setIsOpen(!isOpen)}
-                    >
-                        {isOpen ? <X size={24} /> : <Menu size={24} />}
-                    </button>
-                </div>
+      <nav className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8`}>
+        <div className="flex items-center justify-between h-16">
+          <div className="md:hidden">
+            <button
+              className="md:hidden transition-transform duration-300 hover:scale-110 cursor-pointer"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
 
-                <div className="md:hidden"></div>
-         
-                <div>
-                    <Link href="/" className="text-xl font-bold">
-                        RateMyCPPMajor
-                    </Link>
-                </div>
+          <div className="md:hidden"></div>
 
-                <div className="hidden md:flex items-center space-x-4">
-                    {navItems.map((nav) =>
-                        nav.name === 'User' ? (
-                            <UserButton key={nav.name} />
-                        ) : (
-                            <Link
-                                href={nav.href}
-                                key={nav.name}
-                                className="hover:underline hover:underline-offset-2 px-3 py-2 rounded-md text-sm font-medium"
-                            >
-                                {nav.name}
-                            </Link>
-                        ),
-                    )}
-                    <button
-                        onClick={() => setIsSearchOpen(true)}
-                        className="flex items-center gap-2 md:px-3 lg:pl-3 lg:pr-14 py-2 mr-0 rounded-md text-sm font-medium hover:bg-accent transition-colors border border-border bg-white cursor-pointer"
-                        aria-label="Search"
-                    >
-                        <Search size={16} />
-                        <span className="hidden lg:inline text-muted-foreground">Search...</span>
-                    </button>
-                </div>
+          <div>
+            <Link href="/" className="text-xl font-bold">
+              RateMyCPPMajor
+            </Link>
+          </div>
 
-                <div className="md:hidden flex items-center space-x-2">
-                    <button
-                        onClick={() => setIsSearchOpen(true)}
-                        className="p-2 hover:underline rounded-md transition-colors cursor-pointer"
-                        aria-label="Search"
-                    >
-                        <Search size={20} />
-                    </button>
+          <div className="hidden md:flex items-center space-x-4">
+            {navItems.map((nav) =>
+              nav.name === 'User' ? (
+                <UserButton key={nav.name} />
+              ) : (
+                <Link
+                  href={nav.href}
+                  key={nav.name}
+                  className="hover:underline hover:underline-offset-2 px-3 py-2 rounded-md text-sm font-medium"
+                >
+                  {nav.name}
+                </Link>
+              ),
+            )}
+            <button
+              onClick={() => setIsSearchOpen(true)}
+              className="flex items-center gap-2 md:px-3 lg:pl-3 lg:pr-14 py-2 mr-0 rounded-md text-sm font-medium hover:bg-accent transition-colors border border-border bg-white cursor-pointer"
+              aria-label="Search"
+            >
+              <Search size={16} />
+              <span className="hidden lg:inline text-muted-foreground">
+                Search...
+              </span>
+            </button>
+          </div>
 
-                    {!user ? (
-                        <Link
-                            href={loginHref}
-                            className="hover:underline hover:underline-offset-2  px-3 py-2 rounded-md text-sm font-medium"
-                        >
-                            Login
-                        </Link>
-                    ) : (
-                        <UserButton />
-                    )}
-                </div>
+          <div className="md:hidden flex items-center space-x-2">
+            <button
+              onClick={() => setIsSearchOpen(true)}
+              className="p-2 hover:underline rounded-md transition-colors cursor-pointer"
+              aria-label="Search"
+            >
+              <Search size={20} />
+            </button>
 
-                {isOpen && (
-                    <div
-                        className={`md:hidden absolute top-full left-0 right-0 shadow-md overflow-hidden py-4 bg-white`}
-                    >
-                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col space-y-4">
-                        {navItems.map(
-                            (nav) =>
-                            nav.name !== 'Login' &&
-                            nav.name !== 'User' && (
-                                <Link
-                                href={nav.href}
-                                key={nav.name}
-                                className="hover:underline hover:underline-offset-2 px-3 py-2 rounded-md text-sm font-medium"
-                                >
-                                {nav.name}
-                                </Link>
-                            ),
-                        )}
-                        </div>
-                    </div>
+            {!user ? (
+              <Link
+                href={loginHref}
+                className="hover:underline hover:underline-offset-2  px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Login
+              </Link>
+            ) : (
+              <UserButton />
+            )}
+          </div>
+
+          {isOpen && (
+            <div
+              className={`md:hidden absolute top-full left-0 right-0 shadow-md overflow-hidden py-4 bg-white`}
+            >
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col space-y-4">
+                {navItems.map(
+                  (nav) =>
+                    nav.name !== 'Login' &&
+                    nav.name !== 'User' && (
+                      <Link
+                        href={nav.href}
+                        key={nav.name}
+                        className="hover:underline hover:underline-offset-2 px-3 py-2 rounded-md text-sm font-medium"
+                      >
+                        {nav.name}
+                      </Link>
+                    ),
                 )}
-
-
-                {isSearchOpen && (
-                    <div
-                        className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4"
-                        onClick={() => {
-                            setIsSearchOpen(false);
-                            setSearchQuery('');
-                            setSearchResults([]);
-                        }}
-                    >
-                        <div
-                            className="bg-background rounded-lg shadow-2xl w-full max-w-2xl animate-in fade-in zoom-in-95 duration-200 max-h-[80vh] flex flex-col"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <div className="flex items-center gap-3 p-4 border-b">
-                                <Search size={20} className="text-muted-foreground" />
-                                <input
-                                    type="text"
-                                    placeholder="Search majors..."
-                                    autoFocus
-                                    value={searchQuery}
-                                    onChange={handleSearchChange}
-                                    className="flex-1 outline-none bg-transparent text-base"
-                                    onKeyDown={(e) => {
-                                        if (e.key === "Escape") {
-                                            setIsSearchOpen(false);
-                                            setSearchQuery('');
-                                            setSearchResults([]);
-                                        }
-                                    }}
-                                />
-                                {isSearching && (
-                                    <Loader2 size={20} className="text-muted-foreground animate-spin" />
-                                )}
-                                <button
-                                    onClick={() => {
-                                        setIsSearchOpen(false);
-                                        setSearchQuery('');
-                                        setSearchResults([]);
-                                    }}
-                                    className="p-1 hover:bg-accent rounded-md transition-colors cursor-pointer"
-                                    aria-label="Close search"
-                                >
-                                    <X size={20} />
-                                </button>
-                            </div>
-                            <div className="flex-1 overflow-y-auto">
-                                {searchQuery.trim() === '' ? (
-                                    <div className="p-4">
-                                        <p className="text-sm text-muted-foreground text-center py-8">Start typing to search for majors...</p>
-                                    </div>
-                                ) : searchResults.length === 0 && !isSearching ? (
-                                    <div className="p-4">
-                                        <p className="text-sm text-muted-foreground text-center py-8">No majors found. Try a different search term.</p>
-                                    </div>
-                                ) : (
-                                    <div className="p-2">
-                                        {searchResults.map((major) => (
-                                            <button
-                                                key={major.id}
-                                                onClick={() => handleMajorClick(major.slug)}
-                                                className="w-full text-left p-3 rounded-md hover:bg-accent transition-colors flex items-center gap-3 cursor-pointer"
-                                            >
-                                                {major.imgSrc && (
-                                                    <Image
-                                                        src={major.imgSrc}
-                                                        alt={major.name}
-                                                        width={48}
-                                                        height={48}
-                                                        unoptimized
-                                                        className="w-12 h-12 object-cover rounded"
-                                                    />
-                                                )}
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="font-medium text-sm truncate">{major.name}</p>
-                                                    <p className="text-xs text-muted-foreground truncate">
-                                                        {major.department.college.name} • {major.department.name}
-                                                    </p>
-                                                </div>
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                )}
+              </div>
             </div>
-        </nav>
+          )}
+
+          {isSearchOpen && (
+            <div
+              className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4"
+              onClick={() => {
+                setIsSearchOpen(false);
+                setSearchQuery('');
+                setSearchResults([]);
+              }}
+            >
+              <div
+                className="bg-background rounded-lg shadow-2xl w-full max-w-2xl animate-in fade-in zoom-in-95 duration-200 max-h-[80vh] flex flex-col"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center gap-3 p-4 border-b">
+                  <Search size={20} className="text-muted-foreground" />
+                  <input
+                    type="text"
+                    placeholder="Search majors..."
+                    autoFocus
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    className="flex-1 outline-none bg-transparent text-base"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Escape') {
+                        setIsSearchOpen(false);
+                        setSearchQuery('');
+                        setSearchResults([]);
+                      }
+                    }}
+                  />
+                  {isSearching && (
+                    <Loader2
+                      size={20}
+                      className="text-muted-foreground animate-spin"
+                    />
+                  )}
+                  <button
+                    onClick={() => {
+                      setIsSearchOpen(false);
+                      setSearchQuery('');
+                      setSearchResults([]);
+                    }}
+                    className="p-1 hover:bg-accent rounded-md transition-colors cursor-pointer"
+                    aria-label="Close search"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
+                <div className="flex-1 overflow-y-auto">
+                  {searchQuery.trim() === '' ? (
+                    <div className="p-4">
+                      <p className="text-sm text-muted-foreground text-center py-8">
+                        Start typing to search for majors...
+                      </p>
+                    </div>
+                  ) : searchResults.length === 0 && !isSearching ? (
+                    <div className="p-4">
+                      <p className="text-sm text-muted-foreground text-center py-8">
+                        No majors found. Try a different search term.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="p-2">
+                      {searchResults.map((major) => (
+                        <button
+                          key={major.id}
+                          onClick={() => handleMajorClick(major.slug)}
+                          className="w-full text-left p-3 rounded-md hover:bg-accent transition-colors flex items-center gap-3 cursor-pointer"
+                        >
+                          {major.imgSrc && (
+                            <Image
+                              src={major.imgSrc}
+                              alt={major.name}
+                              width={48}
+                              height={48}
+                              unoptimized
+                              className="w-12 h-12 object-cover rounded"
+                            />
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-sm truncate">
+                              {major.name}
+                            </p>
+                            <p className="text-xs text-muted-foreground truncate">
+                              {major.department.college.name} •{' '}
+                              {major.department.name}
+                            </p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </nav>
     </header>
-  )
+  );
 }

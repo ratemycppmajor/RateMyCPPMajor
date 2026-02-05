@@ -1,12 +1,12 @@
-'use client'
+'use client';
 
-import { useEffect, useMemo, useState, useTransition } from 'react'
-import { useRouter } from 'next/navigation'
-import { useSession } from 'next-auth/react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { Star, ThumbsUp, Trash, Pencil } from "lucide-react"
-import { Button } from '@/components/ui/button'
+import { useEffect, useMemo, useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Star, ThumbsUp, Trash, Pencil } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogClose,
@@ -16,122 +16,126 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
+} from '@/components/ui/dialog';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
-import { deleteReview } from '@/actions/delete-review'
-import { likeReview } from '@/actions/like-review'
+} from '@/components/ui/tooltip';
+import { deleteReview } from '@/actions/delete-review';
+import { likeReview } from '@/actions/like-review';
 
 type Review = {
-  id: string
-  rating: number
-  careerReadiness: number
-  difficulty: number
-  satisfaction: number
-  comment: string | null
-  createdAt: Date | string 
-  userId: string
-  majorSlug: string 
-  majorName: string
-  likeCount?: number
-  likedByMe?: boolean
-}
+  id: string;
+  rating: number;
+  careerReadiness: number;
+  difficulty: number;
+  satisfaction: number;
+  comment: string | null;
+  createdAt: Date | string;
+  userId: string;
+  majorSlug: string;
+  majorName: string;
+  likeCount?: number;
+  likedByMe?: boolean;
+};
 
 type Props = {
-  reviews: Review[]
-  showLoadMore?: boolean 
-  initialVisibleCount?: number 
-}
+  reviews: Review[];
+  showLoadMore?: boolean;
+  initialVisibleCount?: number;
+};
 
-export default function ReviewList({ 
-  reviews, 
+export default function ReviewList({
+  reviews,
   showLoadMore = true,
-  initialVisibleCount = 5 
+  initialVisibleCount = 5,
 }: Props) {
-  const [isDeleting, startDeleteTransition] = useTransition()
-  const [isLiking, startLikeTransition] = useTransition()
-  const router = useRouter()
-  const { data: session } = useSession()
-  const currentUserId = session?.user?.id
+  const [isDeleting, startDeleteTransition] = useTransition();
+  const [isLiking, startLikeTransition] = useTransition();
+  const router = useRouter();
+  const { data: session } = useSession();
+  const currentUserId = session?.user?.id;
   const pathname = usePathname();
 
-  const isSettings = pathname === "/settings/ratings";
+  const isSettings = pathname === '/settings/ratings';
 
-  const REVIEWS_PER_VIEW = 5
-  const [visibleCount, setVisibleCount] = useState(initialVisibleCount)
+  const REVIEWS_PER_VIEW = 5;
+  const [visibleCount, setVisibleCount] = useState(initialVisibleCount);
 
   const initialLikeState = useMemo(() => {
-    const map = new Map<string, { liked: boolean; count: number }>()
+    const map = new Map<string, { liked: boolean; count: number }>();
 
     for (const r of reviews) {
       map.set(r.id, {
         liked: !!r.likedByMe,
         count: r.likeCount ?? 0,
-      })
+      });
     }
 
-    return map
-  }, [reviews])
+    return map;
+  }, [reviews]);
 
-  const [likeState, setLikeState] = useState<Map<string, { liked: boolean; count: number }>>(initialLikeState)
+  const [likeState, setLikeState] =
+    useState<Map<string, { liked: boolean; count: number }>>(initialLikeState);
 
   useEffect(() => {
-    setLikeState(initialLikeState)
-  }, [initialLikeState])
+    setLikeState(initialLikeState);
+  }, [initialLikeState]);
 
   const handleReviewDeletion = (reviewId: string) => {
     startDeleteTransition(async () => {
-      await deleteReview(reviewId)
-      router.refresh()
-    })
-  }
+      await deleteReview(reviewId);
+      router.refresh();
+    });
+  };
 
   const handleLike = (reviewId: string) => {
     if (!currentUserId) {
-      router.push("/login")
-      return
+      router.push('/login');
+      return;
     }
 
-    const prev = likeState.get(reviewId) ?? { liked: false, count: 0 }
+    const prev = likeState.get(reviewId) ?? { liked: false, count: 0 };
     const optimistic = {
       liked: !prev.liked,
       count: Math.max(0, prev.count + (prev.liked ? -1 : 1)),
-    }
+    };
 
     setLikeState((m) => {
-      const next = new Map(m)
-      next.set(reviewId, optimistic)
-      return next
-    })
+      const next = new Map(m);
+      next.set(reviewId, optimistic);
+      return next;
+    });
 
     startLikeTransition(async () => {
-      const result = await likeReview(reviewId)
+      const result = await likeReview(reviewId);
 
       if (result?.error) {
         setLikeState((m) => {
-          const next = new Map(m)
-          next.set(reviewId, prev)
-          return next
-        })
-        return
+          const next = new Map(m);
+          next.set(reviewId, prev);
+          return next;
+        });
+        return;
       }
 
-      router.refresh()
-    })
-  }
+      router.refresh();
+    });
+  };
 
-  const visibleReviews = reviews.slice(0, visibleCount)
-  const hasMore = visibleCount < reviews.length
+  const visibleReviews = reviews.slice(0, visibleCount);
+  const hasMore = visibleCount < reviews.length;
 
   return (
     <div>
       <ul>
         {visibleReviews.map((review) => (
-          <li key={review.id} className="py-4 border-b border-black/30 flex flex-col gap-y-6 text-primary">
-            <div className='flex justify-between'>
+          <li
+            key={review.id}
+            className="py-4 border-b border-black/30 flex flex-col gap-y-6 text-primary"
+          >
+            <div className="flex justify-between">
               <div className="flex items-center gap-0.5">
                 {Array.from({ length: review.rating }).map((_, i) => {
                   return (
@@ -139,29 +143,42 @@ export default function ReviewList({
                       key={i}
                       className={`lg:h-8 lg:w-8 h-6 w-6 fill-amber-400 text-amber-400`}
                     />
-                  )
+                  );
                 })}
               </div>
               <span className="font-semibold">
-                {typeof review.createdAt === 'string' 
+                {typeof review.createdAt === 'string'
                   ? new Date(review.createdAt).toLocaleDateString()
                   : review.createdAt.toLocaleDateString()}
               </span>
             </div>
-            {isSettings && <Link href={`/majors/${review.majorSlug}`} className="hover:underline">{review.majorName}</Link>}
+            {isSettings && (
+              <Link
+                href={`/majors/${review.majorSlug}`}
+                className="hover:underline"
+              >
+                {review.majorName}
+              </Link>
+            )}
 
-            <ul className='flex gap-2 lg:gap-8 text-black flex-wrap'>
-              <li className='border rounded-2xl p-1.5 bg-zinc-50 text-sm'>
-                Career Readiness: {" "}
-                <span className="font-semibold text-primary">{review.careerReadiness}</span>
+            <ul className="flex gap-2 lg:gap-8 text-black flex-wrap">
+              <li className="border rounded-2xl p-1.5 bg-zinc-50 text-sm">
+                Career Readiness:{' '}
+                <span className="font-semibold text-primary">
+                  {review.careerReadiness}
+                </span>
               </li>
-              <li className='border rounded-2xl p-1.5 bg-zinc-50 text-sm'>
-                Difficulty: {" "}
-                <span className="font-semibold text-primary">{review.difficulty}</span>
+              <li className="border rounded-2xl p-1.5 bg-zinc-50 text-sm">
+                Difficulty:{' '}
+                <span className="font-semibold text-primary">
+                  {review.difficulty}
+                </span>
               </li>
-              <li className='border rounded-2xl p-1.5 bg-zinc-50 text-sm'>
-                Satisfaction: {" "}
-                <span className="font-semibold text-primary">{review.satisfaction}</span>
+              <li className="border rounded-2xl p-1.5 bg-zinc-50 text-sm">
+                Satisfaction:{' '}
+                <span className="font-semibold text-primary">
+                  {review.satisfaction}
+                </span>
               </li>
             </ul>
 
@@ -173,13 +190,21 @@ export default function ReviewList({
                 onClick={() => handleLike(review.id)}
                 disabled={isLiking}
                 className="flex items-center gap-2 cursor-pointer"
-                aria-label={likeState.get(review.id)?.liked ? "Unlike review" : "Like review"}
+                aria-label={
+                  likeState.get(review.id)?.liked
+                    ? 'Unlike review'
+                    : 'Like review'
+                }
               >
                 <ThumbsUp
                   className={`h-5 w-5 transition-colors ${
-                    likeState.get(review.id)?.liked ? "text-primary" : "text-black/70 hover:text-primary/80"
+                    likeState.get(review.id)?.liked
+                      ? 'text-primary'
+                      : 'text-black/70 hover:text-primary/80'
                   }`}
-                  fill={likeState.get(review.id)?.liked ? "currentColor" : "none"}
+                  fill={
+                    likeState.get(review.id)?.liked ? 'currentColor' : 'none'
+                  }
                 />
                 <span className="text-sm font-semibold">
                   {likeState.get(review.id)?.count ?? 0}
@@ -208,9 +233,7 @@ export default function ReviewList({
                       <button aria-label="Delete review">
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <Trash
-                              className="text-red-700 h-6 w-6 transition-all duration-300 ease-in-out hover:text-destructive cursor-pointer"
-                            />
+                            <Trash className="text-red-700 h-6 w-6 transition-all duration-300 ease-in-out hover:text-destructive cursor-pointer" />
                           </TooltipTrigger>
                           <TooltipContent side="bottom">
                             <p>Delete review</p>
@@ -220,14 +243,19 @@ export default function ReviewList({
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-md">
                       <DialogHeader>
-                        <DialogTitle className="text-primary">Delete Review</DialogTitle>
+                        <DialogTitle className="text-primary">
+                          Delete Review
+                        </DialogTitle>
                         <DialogDescription>
-                          Are you sure you want to delete your review? This action cannot be undone.
+                          Are you sure you want to delete your review? This
+                          action cannot be undone.
                         </DialogDescription>
                       </DialogHeader>
                       <DialogFooter>
                         <DialogClose asChild>
-                          <Button className="cursor-pointer" variant="outline">Cancel</Button>
+                          <Button className="cursor-pointer" variant="outline">
+                            Cancel
+                          </Button>
                         </DialogClose>
                         <Button
                           className="cursor-pointer bg-red-700 transition-all duration-300 ease-in-out"
@@ -237,7 +265,7 @@ export default function ReviewList({
                           disabled={isDeleting}
                           aria-label="Delete review"
                         >
-                          {isDeleting ? "Deleting..." : "Delete Review"}
+                          {isDeleting ? 'Deleting...' : 'Delete Review'}
                         </Button>
                       </DialogFooter>
                     </DialogContent>
@@ -262,6 +290,5 @@ export default function ReviewList({
         </div>
       )}
     </div>
-  )
+  );
 }
-

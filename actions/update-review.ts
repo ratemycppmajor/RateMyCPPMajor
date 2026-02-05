@@ -6,13 +6,17 @@ import { db } from '@/lib/db';
 import { currentUser } from '@/lib/auth';
 import { RatingSchema } from '@/schemas';
 
-const UpdateReviewSchema = z.object({
-  reviewId: z.string().min(1),
-  reviewText: z.string().min(60, 'Review must be at least 60 characters'),
-  ratings: RatingSchema,
-}).strict();
+const UpdateReviewSchema = z
+  .object({
+    reviewId: z.string().min(1),
+    reviewText: z.string().min(60, 'Review must be at least 60 characters'),
+    ratings: RatingSchema,
+  })
+  .strict();
 
-export const updateReview = async (input: z.infer<typeof UpdateReviewSchema>) => {
+export const updateReview = async (
+  input: z.infer<typeof UpdateReviewSchema>,
+) => {
   const user = await currentUser();
   if (!user?.id) {
     return { error: 'Unauthorized' };
@@ -52,4 +56,3 @@ export const updateReview = async (input: z.infer<typeof UpdateReviewSchema>) =>
 
   return { success: true, review };
 };
-

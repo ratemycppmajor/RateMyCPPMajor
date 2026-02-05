@@ -3,7 +3,7 @@
 import { db } from '@/lib/db';
 import { currentUser } from '@/lib/auth';
 
-export const deleteReview = async (reviewId : string) => {
+export const deleteReview = async (reviewId: string) => {
   const user = await currentUser();
 
   if (!user) {
@@ -11,9 +11,9 @@ export const deleteReview = async (reviewId : string) => {
   }
 
   await db.review.delete({
-    where: { 
-        id: reviewId,
-        userId: user.id 
+    where: {
+      id: reviewId,
+      userId: user.id,
     },
   });
 

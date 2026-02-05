@@ -4,12 +4,16 @@ import { MajorWithRelations } from '@/types/major';
 import { notFound } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
 
-export default async function Major({ params } : {params : Promise<{ slug: string }>}) {
+export default async function Major({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const user = await currentUser();
-  const userIdForWhere = user?.id ?? "__anonymous__";
+  const userIdForWhere = user?.id ?? '__anonymous__';
 
-  const major : MajorWithRelations | null = await db.major.findUnique({
+  const major: MajorWithRelations | null = await db.major.findUnique({
     where: { slug },
     select: {
       name: true,
@@ -28,7 +32,8 @@ export default async function Major({ params } : {params : Promise<{ slug: strin
           comment: true,
           createdAt: true,
           userId: true,
-          likes: { // Get the likes for the current user
+          likes: {
+            // Get the likes for the current user
             where: {
               userId: userIdForWhere,
             },
@@ -36,12 +41,13 @@ export default async function Major({ params } : {params : Promise<{ slug: strin
               id: true,
             },
           },
-          _count: { // Get the count of likes for the review
+          _count: {
+            // Get the count of likes for the review
             select: {
               likes: true,
             },
           },
-        }
+        },
       },
       department: {
         select: {
@@ -49,18 +55,16 @@ export default async function Major({ params } : {params : Promise<{ slug: strin
           college: {
             select: {
               name: true,
-            }
-          }
-        }
-      }
-    }
-  })
+            },
+          },
+        },
+      },
+    },
+  });
 
   if (!major) {
     notFound();
   }
 
-  return (
-    <MajorClient major={major} />
-  )
+  return <MajorClient major={major} />;
 }

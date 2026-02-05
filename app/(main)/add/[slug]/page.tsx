@@ -3,10 +3,14 @@ import { AddReviewWithRelations } from '@/types/major';
 import { notFound } from 'next/navigation';
 import ReviewClient from '@/components/review/ReviewClient';
 
-export default async function AddReview({ params } : {params : Promise<{ slug: string }>}) {
+export default async function AddReview({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
 
-  const major : AddReviewWithRelations | null = await db.major.findUnique({
+  const major: AddReviewWithRelations | null = await db.major.findUnique({
     where: { slug },
     select: {
       name: true,
@@ -17,18 +21,16 @@ export default async function AddReview({ params } : {params : Promise<{ slug: s
           college: {
             select: {
               name: true,
-            }
-          }
-        }
-      }
-    }
-  })
+            },
+          },
+        },
+      },
+    },
+  });
 
   if (!major) {
     notFound();
   }
 
-  return (
-    <ReviewClient major={major} />
-  )
+  return <ReviewClient major={major} />;
 }

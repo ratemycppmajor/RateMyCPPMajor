@@ -46,8 +46,7 @@ export async function GET(req: NextRequest) {
     console.error('Error searching majors:', error);
     return NextResponse.json(
       { error: 'Failed to search majors' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
-

@@ -9,16 +9,16 @@ const cppEmailSchema = z
 
 // Empty string = "not provided" so users can change email/name without filling CPP email
 const optionalCppEmail = z.optional(
-  z.union([z.literal(''), cppEmailSchema]).transform((val) =>
-    val === '' ? undefined : val
-  )
+  z
+    .union([z.literal(''), cppEmailSchema])
+    .transform((val) => (val === '' ? undefined : val)),
 );
 
 // Empty string = "not provided" so OAuth users (who don't see password fields) can submit
 const optionalPassword = z.optional(
-  z.union([z.literal(''), z.string().min(6)]).transform((val) =>
-    val === '' ? undefined : val
-  )
+  z
+    .union([z.literal(''), z.string().min(6)])
+    .transform((val) => (val === '' ? undefined : val)),
 );
 
 export const SettingsSchema = z
@@ -89,15 +89,19 @@ export const NewPasswordSchema = z.object({
   }),
 });
 
-export const RatingSchema = z.object({
-  major: z.number().int().min(1).max(5),
-  careerReadiness: z.number().int().min(1).max(5),
-  difficulty: z.number().int().min(1).max(5),
-  satisfaction: z.number().int().min(1).max(5),
-}).strict();
+export const RatingSchema = z
+  .object({
+    major: z.number().int().min(1).max(5),
+    careerReadiness: z.number().int().min(1).max(5),
+    difficulty: z.number().int().min(1).max(5),
+    satisfaction: z.number().int().min(1).max(5),
+  })
+  .strict();
 
-export const ReviewSchema = z.object({
-  slug: z.string().min(1),
-  reviewText: z.string().min(60, 'Review must be at least 60 characters'),
-  ratings: RatingSchema,
-}).strict();
+export const ReviewSchema = z
+  .object({
+    slug: z.string().min(1),
+    reviewText: z.string().min(60, 'Review must be at least 60 characters'),
+    ratings: RatingSchema,
+  })
+  .strict();
