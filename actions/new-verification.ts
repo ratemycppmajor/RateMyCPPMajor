@@ -12,9 +12,10 @@ import { getVerficationToken } from '@/services/verfication-token';
  * 3. Confirms the associated user exists.
  * 4. Updates the user's `emailVerified` field and optionally updates the email.
  * 5. Deletes the used verification token from the database.
- * Two flows:
- * 1. CPP email verification (token has userId): set user's cppEmail, cppEmailVerified, studentVerified. Primary email unchanged.
- * 2. Primary email verification (no userId): find user by token email, update email, emailVerified, and studentVerified if @cpp.edu.
+ * Three flows:
+ * 1. CPP email verification (token has userId + purpose 'cpp_email'): set user's cppEmail, cppEmailVerified, studentVerified. Primary email unchanged.
+ * 2. Primary email change (token has userId + purpose 'primary_email'): update user's email, emailVerified, and studentVerified (if @cpp.edu or already had verified CPP).
+ * 3. Signup verification (no userId, no purpose): find user by token email, update email, emailVerified, and studentVerified if @cpp.edu.
  *
  * @param token - The verification token sent to the user's email.
  * @returns An object indicating success or an appropriate error message.
@@ -85,6 +86,7 @@ export const newVerification = async (token: string) => {
     return { success: 'Email verified!' };
   }
 
+  // Signup verification: no userId, no purpose, find user by token email
   const existingUser = await getUserByEmail(existingToken.email);
 
   if (!existingUser) {

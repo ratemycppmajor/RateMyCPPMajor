@@ -78,7 +78,7 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
     if (existingUser && existingUser.id !== user.id) {
       return { error: 'Email already in use!' };
     }
-
+    // generate verification token using new email and user id for primary email change
     const verificationToken = await generateVerificationToken(
       values.email,
       user.id,
