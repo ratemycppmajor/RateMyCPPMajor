@@ -17,7 +17,7 @@ const optionalCppEmail = z.optional(
 // Empty string = "not provided" so OAuth users (who don't see password fields) can submit
 const optionalPassword = z.optional(
   z
-    .union([z.literal(''), z.string().min(6)])
+    .union([z.literal(''), z.string().min(8)])
     .transform((val) => (val === '' ? undefined : val)),
 );
 
