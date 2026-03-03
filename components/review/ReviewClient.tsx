@@ -88,7 +88,7 @@ export default function ReviewClient({ major, review }: Props) {
         return;
       }
 
-      router.push(`/majors/${major.slug}/${review.id}`);
+      router.push(`/majors/${major.slug}`);
     });
   };
 
