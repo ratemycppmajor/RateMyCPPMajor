@@ -13,9 +13,9 @@ import { getVerficationToken } from '@/services/verfication-token';
  * 4. Updates the user's `emailVerified` field and optionally updates the email.
  * 5. Deletes the used verification token from the database.
  * Three flows:
- * 1. CPP email verification (token has userId + purpose 'cpp_email'): set user's cppEmail, cppEmailVerified, studentVerified. Primary email unchanged.
- * 2. Primary email change (token has userId + purpose 'primary_email'): update user's email, emailVerified, and studentVerified (if @cpp.edu or already had verified CPP).
- * 3. Signup verification (no userId, no purpose): find user by token email, update email, emailVerified, and studentVerified if @cpp.edu.
+ * 1. CPP email verification (token has userId + purpose 'cpp_email'): set user's cppEmail, cppEmailVerified, studentVerified. Primary email unchanged. e.g. User adds @cpp.edu email in specific field in settings
+ * 2. Primary email change (token has userId + purpose 'primary_email'): update user's email, emailVerified, and studentVerified (if @cpp.edu or already had verified CPP). e.g. User changes their general email to different general email or change to @cpp.edu email
+ * 3. Signup verification (no userId, no purpose): find user by token email, update email, emailVerified, and studentVerified if @cpp.edu. e.g. User signs up with @cpp.edu email
  *
  * @param token - The verification token sent to the user's email.
  * @returns An object indicating success or an appropriate error message.
@@ -51,6 +51,8 @@ export const newVerification = async (token: string) => {
         studentVerified: true,
       },
     });
+
+    // no need to store in db anymore
     await db.verificationToken.delete({
       where: { id: existingToken.id },
     });
@@ -65,13 +67,11 @@ export const newVerification = async (token: string) => {
 
     const existingUser = await db.user.findUnique({
       where: { id: existingToken.userId! },
-      select: { cppEmail: true, cppEmailVerified: true },
+      select: { cppEmail: true, cppEmailVerified: true }, // can be null
     });
 
-    // Keep studentVerified true if new primary is @cpp.edu OR they already have verified CPP email
-    const studentVerified =
-      newEmailIsCpp ||
-      !!(existingUser?.cppEmail && existingUser?.cppEmailVerified);
+    // Keep studentVerified true if new primary is @cpp.edu OR they already have verified CPP email from adding @cpp.edu email in settings
+    const studentVerified = newEmailIsCpp || !!(existingUser?.cppEmail && existingUser?.cppEmailVerified);
 
     await db.user.update({
       where: { id: existingToken.userId! },
@@ -82,6 +82,7 @@ export const newVerification = async (token: string) => {
       },
     });
 
+    // no need to store in db anymore
     await db.verificationToken.delete({
       where: { id: existingToken.id },
     });

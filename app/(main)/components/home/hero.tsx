@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import HomeNavbar from '../../../../components/navbar/home-navbar';
 import { useRouter } from 'next/navigation';
@@ -27,42 +27,37 @@ const Hero = () => {
   const searchRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  const searchMajors = useCallback(async (query: string) => {
-    if (!query.trim()) {
-      setSearchResults([]);
-      return;
-    }
-
-    setIsSearching(true);
-
-    try {
-      const res = await fetch(
-        `/api/majors/search?q=${encodeURIComponent(query)}`,
-      );
-
-      if (res.ok) {
-        const data = await res.json();
-        setSearchResults(data.majors || []);
-      } else {
-        setSearchResults([]);
-      }
-    } catch (error) {
-      console.error('Error searching majors:', error);
-      setSearchResults([]);
-    } finally {
-      setIsSearching(false);
-    }
-  }, []);
-
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (isSearchOpen) {
-        searchMajors(searchQuery);
+    const timer = setTimeout(async () => {
+
+      if (!isSearchOpen || !searchQuery.trim()) {
+        setSearchResults([]);
+        return;
+      }
+
+      setIsSearching(true);
+
+      try {
+        const res = await fetch(
+          `/api/majors/search?q=${encodeURIComponent(searchQuery)}`,
+        );
+
+        if (res.ok) {
+          const data = await res.json();
+          setSearchResults(data.majors || []);
+        } else {
+          setSearchResults([]);
+        }
+      } catch (error) {
+        console.error('Error searching majors:', error);
+        setSearchResults([]);
+      } finally {
+        setIsSearching(false);
       }
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [searchQuery, isSearchOpen, searchMajors]);
+  }, [searchQuery, isSearchOpen]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

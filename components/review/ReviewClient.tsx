@@ -158,6 +158,30 @@ export default function ReviewClient({ major, review }: Props) {
           {!review ? 'Write a' : 'Edit'} Review
         </h2>
 
+        
+  {/* const ratingOptions = [
+    {
+      name: 'Major',
+      key: 'major' as const,
+      description: 'Overall rating of the major program',
+    },
+    {
+      name: 'Career Readiness',
+      key: 'careerReadiness' as const,
+      description: 'How well the major prepares you for your career',
+    },
+    {
+      name: 'Difficulty',
+      key: 'difficulty' as const,
+      description: 'Academic challenge and workload',
+    },
+    {
+      name: 'Satisfaction',
+      key: 'satisfaction',
+      description: 'Overall satisfaction with the program',
+    },
+  ]; */}
+
         <div className="flex flex-col gap-y-10">
           {ratingOptions.map((option) => (
             <StarRating

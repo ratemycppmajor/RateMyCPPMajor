@@ -30,14 +30,15 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
     values.newPassword = undefined;
   }
 
-  // CPP email verification: add a @cpp.edu email to gain studentVerified (keeps OAuth/primary email unchanged)
+  // CPP email verification: e.g. user adds a @cpp.edu email with their gmail account to gain studentVerified (keeps OAuth/primary email unchanged)
   if (values.cppEmail) {
     const cppEmailLower = values.cppEmail.toLowerCase();
 
-    // Already have this CPP email verified — don't send another verification; allow other updates
+    // Already have this CPP email verified - don't send another verification; allow other updates
     if (dbUser.cppEmail === cppEmailLower && dbUser.cppEmailVerified) {
       values.cppEmail = undefined;
-    } else {
+    } 
+    else {
       const existingByEmail = await getUserByEmail(cppEmailLower);
 
       if (existingByEmail && existingByEmail.id !== user.id) {
@@ -74,6 +75,7 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
     }
   }
 
+  // if want to change general email, ensure not the same email
   if (values.email && values.email !== user.email) {
     // ensure the email is not already in use by another user
     const existingUser = await getUserByEmail(values.email);
@@ -96,6 +98,7 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
     return { success: 'Verification email sent!' };
   }
 
+  // updating user's settings values fields
   if (values.password && values.newPassword && dbUser.password) {
     // check if they entered a correct password
     const passwordMatch = await bcrypt.compare(

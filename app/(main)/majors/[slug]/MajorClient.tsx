@@ -339,8 +339,8 @@ export default function MajorClient({ major }: Props) {
         <ReviewList
           reviews={major.reviews.map((review) => ({
             ...review,
-            likeCount: review._count.likes,
-            likedByMe: review.likes.length > 0,
+            likeCount: review._count.likes, // total users liked review
+            likedByMe: review.likes.length > 0, // liked by "me"
             majorSlug: major.slug,
             majorName: major.name,
           }))}
