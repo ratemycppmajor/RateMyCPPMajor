@@ -37,20 +37,12 @@ export default function UserRatingClient({ reviews }: Props) {
 
           <ReviewList
             reviews={reviews.map((review) => ({
-              id: review.id,
-              rating: review.rating,
-              careerReadiness: review.careerReadiness,
-              difficulty: review.difficulty,
-              satisfaction: review.satisfaction,
-              comment: review.comment,
-              createdAt: review.createdAt,
-              userId: review.userId,
+              ...review,
               likeCount: review._count.likes,
               likedByMe: review.likes.length > 0,
               majorSlug: review.major.slug,
               majorName: review.major.name,
             }))}
-            showLoadMore={true}
           />
         </>
       )}

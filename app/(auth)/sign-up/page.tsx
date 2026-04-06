@@ -39,11 +39,10 @@ const SignUp = () => {
     setError('');
     setSuccess('');
 
-    startTransition(() => {
-      signup(values).then((data) => {
-        setError(data.error);
-        setSuccess(data.success);
-      });
+    startTransition(async () => {
+      const data = await signup(values);
+      setError(data.error);
+      setSuccess(data.success);
     });
   };
 

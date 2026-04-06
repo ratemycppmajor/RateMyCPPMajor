@@ -42,13 +42,11 @@ type Review = {
 
 type Props = {
   reviews: Review[];
-  showLoadMore?: boolean;
   initialVisibleCount?: number;
 };
 
 export default function ReviewList({
   reviews,
-  showLoadMore = true,
   initialVisibleCount = 5,
 }: Props) {
   const [isDeleting, startDeleteTransition] = useTransition();
@@ -66,18 +64,17 @@ export default function ReviewList({
   const initialLikeState = useMemo(() => {
     const map = new Map<string, { liked: boolean; count: number }>();
 
-    for (const r of reviews) {
-      map.set(r.id, {
-        liked: !!r.likedByMe,
-        count: r.likeCount ?? 0,
+    for (const review of reviews) {
+      map.set(review.id, {
+        liked: !!review.likedByMe,
+        count: review.likeCount ?? 0,
       });
     }
 
     return map;
   }, [reviews]);
 
-  const [likeState, setLikeState] =
-    useState<Map<string, { liked: boolean; count: number }>>(initialLikeState);
+  const [likeState, setLikeState] = useState(initialLikeState);
 
   useEffect(() => {
     setLikeState(initialLikeState);
@@ -116,7 +113,7 @@ export default function ReviewList({
           const next = new Map(m);
           next.set(reviewId, prev);
           return next;
-        });
+        }); // revert back if error
         return;
       }
 
@@ -277,7 +274,7 @@ export default function ReviewList({
         ))}
       </ul>
 
-      {showLoadMore && hasMore && (
+      {hasMore && (
         <div className="mt-8 flex justify-center">
           <Button
             size="lg"

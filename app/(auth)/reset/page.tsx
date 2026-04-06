@@ -36,11 +36,10 @@ const Reset = () => {
     setError('');
     setSuccess('');
 
-    startTransition(() => {
-      reset(values).then((data) => {
-        setError(data.error);
-        setSuccess(data.success);
-      });
+    startTransition(async () => {
+      const data = await reset(values);
+      setError(data.error);
+      setSuccess(data.success);
     });
   };
 

@@ -50,28 +50,24 @@ const Login = () => {
     setSuccess('');
     // lets the app stay interactive while waiting for non-urgent async updates to complete
     // lets us track the pending state to disable inputs
-    startTransition(() => {
-      login(values).then(async (data) => {
-        setError(data.error);
-        setSuccess(data.success);
+    startTransition(async () => {
+      const data = await login(values);
 
-        if (
-          data.error === 'Email does not exist!' ||
-          data.error === 'Invalid credentials!'
-        ) {
-          return;
-        }
+      setError(data.error);
+      setSuccess(data.success);
 
-        if (data.success === 'Confirmation email sent!') {
-          return;
-        }
+      if (data.error === 'Email does not exist!' || data.error === 'Invalid credentials!') {
+        return;
+      }
 
-        // If server says “ok”, then actually sign in
-        await signIn('credentials', {
-          redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
-          email: values.email,
-          password: values.password,
-        });
+      if (data.success === 'Confirmation email sent!') {
+        return;
+      }
+
+      await signIn('credentials', {
+        redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
+        email: values.email,
+        password: values.password,
       });
     });
   };

@@ -35,8 +35,8 @@ import { useCurrentUser } from '@/hooks/use-current-user';
 
 const Settings = () => {
   const { user } = useCurrentUser();
-  const [error, setError] = useState<string | undefined>();
-  const [success, setSuccess] = useState<string | undefined>();
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const { update } = useSession();
   const [isPending, startTransition] = useTransition();
 
@@ -65,31 +65,49 @@ const Settings = () => {
   }, [user, form]);
 
   const onSubmit = (values: z.infer<typeof SettingsSchema>) => {
-    setError(undefined);
-    setSuccess(undefined);
-    startTransition(() => {
-      settings(values).then((data) => {
+    setError("");
+    setSuccess("");
+
+    startTransition(async () => {
+      try {
+        const data = await settings(values);
+
         if (data.error) {
           setError(data.error);
+          return;
         }
 
         if (data.success) {
           update();
           setSuccess(data.success);
         }
-      });
+      } catch (err) {
+        setError("Error failed to save.");
+        console.error('Save failed:', err);
+      }
     });
   };
 
   const handleAccountDeletion = () => {
-    deleteAccount().then(async (data) => {
-      if (data.error) {
-        setError(data.error);
-      }
+    startTransition(async () => {
+      setError("");
+      setSuccess("");
 
-      if (data.success) {
-        setSuccess(data.success);
-        await signOut();
+      try {
+        const data = await deleteAccount();
+
+        if (data.error) {
+          setError(data.error);
+          return;
+        }
+
+        if (data.success) {
+          setSuccess(data.success);
+          await signOut({ redirect: true });
+        }
+      } catch (err) {
+        setError('Error failed to delete account.');
+        console.error('Account deletion failed:', err);
       }
     });
   };
@@ -126,7 +144,7 @@ const Settings = () => {
                   )}
                 />
 
-                {/* CPP email: OAuth users can add @cpp.edu to get studentVerified without replacing their OAuth email */}
+                {/* CPP email: OAuth users can add @cpp.edu to get studentVerified without replacing their OAuth email. Only shows if user doesn't initially create account with @cpp.edu */}
                 {(!user?.studentVerified || user?.cppEmail) && (
                   <FormField
                     control={form.control}
@@ -180,7 +198,7 @@ const Settings = () => {
                       name="password"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Password</FormLabel>
+                          <FormLabel>Current Password</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -216,6 +234,8 @@ const Settings = () => {
               </div>
               <FormError message={error} />
               <FormSuccess message={success} />
+
+              {/* Save & Delete Buttons */}
               <div className="flex justify-between">
                 <Button
                   className="cursor-pointer"

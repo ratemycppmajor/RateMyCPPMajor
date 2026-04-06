@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Menu, X, Search, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useCurrentUser } from '@/hooks/use-current-user';
 import { UserButton } from '../auth/user-button';
 import Image from 'next/image';
-import { usePathname, useSearchParams, useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 interface NavbarProps {
   home?: boolean;
@@ -34,14 +34,9 @@ export default function Navbar({ home = false }: NavbarProps) {
   const [isSearching, setIsSearching] = useState(false);
   const { user } = useCurrentUser();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const router = useRouter();
 
   let callbackUrl = pathname;
-
-  if (searchParams.toString()) {
-    callbackUrl += `?${searchParams.toString()}`;
-  }
 
   const loginHref = `/login?callbackUrl=${encodeURIComponent(callbackUrl)}`;
 
@@ -69,42 +64,37 @@ export default function Navbar({ home = false }: NavbarProps) {
     }
   }, [home]);
 
-  const searchMajors = useCallback(async (query: string) => {
-    if (!query.trim()) {
-      setSearchResults([]);
-      return;
-    }
-
-    setIsSearching(true);
-
-    try {
-      const res = await fetch(
-        `/api/majors/search?q=${encodeURIComponent(query)}`,
-      );
-
-      if (res.ok) {
-        const data = await res.json();
-        setSearchResults(data.majors || []);
-      } else {
-        setSearchResults([]);
-      }
-    } catch (error) {
-      console.error('Error searching majors:', error);
-      setSearchResults([]);
-    } finally {
-      setIsSearching(false);
-    }
-  }, []);
-
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (isSearchOpen) {
-        searchMajors(searchQuery);
+    const timer = setTimeout(async () => {
+
+      if (!isSearchOpen || !searchQuery.trim()) {
+        setSearchResults([]);
+        return;
+      }
+
+      setIsSearching(true);
+
+      try {
+        const res = await fetch(
+          `/api/majors/search?q=${encodeURIComponent(searchQuery)}`,
+        );
+
+        if (res.ok) {
+          const data = await res.json();
+          setSearchResults(data.majors || []);
+        } else {
+          setSearchResults([]);
+        }
+      } catch (error) {
+        console.error('Error searching majors:', error);
+        setSearchResults([]);
+      } finally {
+        setIsSearching(false);
       }
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [searchQuery, isSearchOpen, searchMajors]);
+  }, [searchQuery, isSearchOpen]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);

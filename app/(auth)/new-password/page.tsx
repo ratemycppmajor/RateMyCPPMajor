@@ -40,11 +40,10 @@ const NewPassword = () => {
     setError('');
     setSuccess('');
 
-    startTransition(() => {
-      newPassword(values, token).then((data) => {
-        setError(data.error);
-        setSuccess(data.success);
-      });
+    startTransition(async () => {
+      const data = await newPassword(values, token);
+      setError(data.error);
+      setSuccess(data.success);
     });
   };
 

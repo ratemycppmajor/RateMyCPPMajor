@@ -46,7 +46,7 @@ type Props = {
 
 export default function MajorListClient({ colleges }: Props) {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState('college');
+  const [sortOption, setSortOption] = useState('college');
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<string[]>([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -54,7 +54,7 @@ export default function MajorListClient({ colleges }: Props) {
   const toggleCollege = (id: string) => {
     setSelected((prev) =>
       prev.includes(id)
-        ? prev.filter((college) => college !== id)
+        ? prev.filter((collegeId) => collegeId !== id)
         : [...prev, id],
     );
   };
@@ -62,7 +62,7 @@ export default function MajorListClient({ colleges }: Props) {
   const filteredColleges =
     selected.length === 0
       ? colleges
-      : colleges.filter((college) => selected.includes(college.name));
+      : colleges.filter((college) => selected.includes(college.id));
 
   const searchLower = search.toLowerCase();
 
@@ -89,8 +89,7 @@ export default function MajorListClient({ colleges }: Props) {
       }
 
       return null;
-    })
-    .filter(Boolean) as typeof filteredColleges;
+    }).filter(Boolean) as typeof filteredColleges;
 
   const allMajors = searchFilteredColleges.flatMap((college) =>
     college.departments.flatMap((dept) =>
@@ -104,9 +103,9 @@ export default function MajorListClient({ colleges }: Props) {
 
   const groupedLetter = allMajors.reduce(
     (acc, major) => {
-      const letter = major.name[0];
-      if (!acc[letter]) acc[letter] = [];
-      acc[letter].push(major);
+      const letter = major.name[0]; // get first letter
+      if (!acc[letter]) acc[letter] = []; // init array
+      acc[letter].push(major); // push major into that letter
 
       return acc;
     },
@@ -177,10 +176,7 @@ export default function MajorListClient({ colleges }: Props) {
                     aria-expanded={open}
                     className="w-[200px] justify-between cursor-pointer shadow-sm hover:text-primary focus:text-primary"
                   >
-                    {
-                      sortOptions.find((option) => option.value === value)
-                        ?.label
-                    }
+                    {sortOptions.find((option) => option.value === sortOption)?.label}
                     <ChevronDown className="opacity-50" />
                   </Button>
                 </PopoverTrigger>
@@ -193,16 +189,16 @@ export default function MajorListClient({ colleges }: Props) {
                             key={option.value}
                             value={option.value}
                             onSelect={(currentValue) => {
-                              setValue(currentValue);
+                              setSortOption(currentValue);
                               setOpen(false);
                             }}
-                            className={`cursor-pointer ${value === option.value ? 'text-primary bg-accent data-[selected=true]:text-primary' : ''}`}
+                            className={`cursor-pointer ${sortOption === option.value ? 'text-primary bg-accent data-[selected=true]:text-primary' : ''}`}
                           >
                             {option.label}
                             <Check
                               className={cn(
                                 'ml-auto text-primary',
-                                value === option.value
+                                sortOption === option.value
                                   ? 'opacity-100'
                                   : 'opacity-0',
                               )}
@@ -221,7 +217,7 @@ export default function MajorListClient({ colleges }: Props) {
             <span className="font-semibold">
               Results Found: {allMajors.length}
             </span>
-            {value === 'alphabetical' && (
+            {sortOption === 'alphabetical' && (
               <ul className="flex flex-wrap gap-3 text-xl lg:text-2xl mt-5">
                 {alphabeticalMajors.map((letter) => (
                   <li key={letter}>
@@ -246,10 +242,10 @@ export default function MajorListClient({ colleges }: Props) {
 
           {/* Search Results */}
           <ul className="flex flex-col gap-6 mt-12 mb-20">
-            {value !== 'alphabetical'
+            {sortOption !== 'alphabetical'
               ? searchFilteredColleges.map((college) => (
                   <li key={college.id}>
-                    {value === 'college' && (
+                    {sortOption === 'college' && (
                       <h2 className="text-3xl lg:text-4xl mb-8 font-semibold">
                         {college.name}
                       </h2>
@@ -379,8 +375,8 @@ export default function MajorListClient({ colleges }: Props) {
                 <Checkbox
                   id={college.name}
                   className="border-primary cursor-pointer"
-                  checked={selected.includes(college.name)}
-                  onCheckedChange={() => toggleCollege(college.name)}
+                  checked={selected.includes(college.id)}
+                  onCheckedChange={() => toggleCollege(college.id)}
                 />
                 <Label htmlFor={college.name}>{college.name}</Label>
               </div>
@@ -421,8 +417,8 @@ export default function MajorListClient({ colleges }: Props) {
                   >
                     <Checkbox
                       id={`mobile-filter-${college.name}`}
-                      checked={selected.includes(college.name)}
-                      onCheckedChange={() => toggleCollege(college.name)}
+                      checked={selected.includes(college.id)}
+                      onCheckedChange={() => toggleCollege(college.id)}
                       className="border-primary cursor-pointer"
                     />
                     <div className="flex-1">
