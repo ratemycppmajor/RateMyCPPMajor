@@ -36,15 +36,15 @@ export default auth((req) => {
 
   // check if we are on auth route
   if (isAuthRoute) {
-    // if logged in, redirect to default("settings") page, pass nextUrl so it creates absolute url
+    // if logged in, redirect to default("settings") page, pass nextUrl so it creates absolute url e.g. user visits /login and is logged in, then redirects to /settings
     if (isLoggedIn) {
       return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
-    // Allow unauthenticated users to access auth routes
+    // Allow unauthenticated users to access auth routes e.g. user not logged in and visits /login or /sign-up
     return NextResponse.next();
   }
 
-  // check if not logged in and not on public route
+  // check if not logged in and not on public route e.g. user tries to access /add but is not logged in
   if (!isLoggedIn && !isPublicRoute) {
     // if you login redirect back to the page you were on
     let callbackUrl = nextUrl.pathname;
