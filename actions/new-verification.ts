@@ -15,7 +15,7 @@ import { getVerficationToken } from '@/services/verfication-token';
  * Three flows:
  * 1. CPP email verification (token has userId + purpose 'cpp_email'): set user's cppEmail, cppEmailVerified, studentVerified. Primary email unchanged. e.g. User adds @cpp.edu email in specific field in settings
  * 2. Primary email change (token has userId + purpose 'primary_email'): update user's email, emailVerified, and studentVerified (if @cpp.edu or already had verified CPP). e.g. User changes their general email to different general email or change to @cpp.edu email
- * 3. Signup verification (no userId, no purpose): find user by token email, update email, emailVerified, and studentVerified if @cpp.edu. e.g. User signs up with @cpp.edu email
+ * 3. Signup verification (no userId, no purpose): find user by token email, update email, emailVerified, and studentVerified if @cpp.edu. e.g. User signs up with @cpp.edu email or regular email or sign in and not verified email yet
  *
  * @param token - The verification token sent to the user's email.
  * @returns An object indicating success or an appropriate error message.
