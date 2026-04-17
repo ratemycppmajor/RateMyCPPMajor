@@ -33,7 +33,7 @@ export default async function Major({
           createdAt: true,
           userId: true,
           likes: {
-            // Get the likes for the current user
+            // Get the likes for the current user, used to track all the reviews the "user" liked
             where: {
               userId: userIdForWhere,
             },

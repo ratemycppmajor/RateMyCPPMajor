@@ -14,9 +14,7 @@ const UpdateReviewSchema = z
   })
   .strict();
 
-export const updateReview = async (
-  input: z.infer<typeof UpdateReviewSchema>,
-) => {
+export const updateReview = async (input: z.infer<typeof UpdateReviewSchema>) => {
   const user = await currentUser();
   if (!user?.id) {
     return { error: 'Unauthorized' };

@@ -347,7 +347,7 @@ export default function MajorListClient({ colleges }: Props) {
           </ul>
         </div>
 
-        {/* Filter button */}
+        {/* Mobile Filter button */}
         <div>
           <button
             onClick={() => setIsFilterOpen(true)}
