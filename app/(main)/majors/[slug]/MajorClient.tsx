@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useSession } from 'next-auth/react';
+import { useCurrentUser } from '@/hooks/use-current-user';
 import { Brain, Briefcase, Smile, Star } from 'lucide-react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
@@ -24,12 +24,10 @@ type Props = {
 
 export default function MajorClient({ major }: Props) {
   useEffect(() => window.document.scrollingElement?.scrollTo(0, 0), []);
-  const { data: session } = useSession();
+  const { user } = useCurrentUser();
   const router = useRouter();
 
-  const hasReviewed = !!major.reviews.find(
-    (review) => review.userId === session?.user?.id,
-  );
+  const hasReviewed = !!major.reviews.find((review) => review.userId === user?.id);
 
   const avgRating =
     major?.reviews && major.reviews.length > 0
@@ -96,11 +94,11 @@ export default function MajorClient({ major }: Props) {
   ];
 
   const addReview = () => {
-    if (!session?.user) {
+    if (!user) {
       router.push(`/add/${major.slug}`); // Redirect to login if not authenticated
     }
 
-    if (!session?.user?.studentVerified) {
+    if (!user?.studentVerified) {
       toast.error('Only CPP students (@cpp.edu) can add reviews.');
       return;
     }
@@ -178,7 +176,7 @@ export default function MajorClient({ major }: Props) {
             <button
               onClick={() => addReview()}
               title={
-                session && !session.user?.studentVerified
+                !user?.studentVerified
                   ? 'Only CPP students (@cpp.edu) can add reviews'
                   : undefined
               }

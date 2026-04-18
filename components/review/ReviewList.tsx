@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
+import { useCurrentUser } from '@/hooks/use-current-user';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Star, ThumbsUp, Trash, Pencil } from 'lucide-react';
@@ -52,8 +52,8 @@ export default function ReviewList({
   const [isDeleting, startDeleteTransition] = useTransition();
   const [isLiking, startLikeTransition] = useTransition();
   const router = useRouter();
-  const { data: session } = useSession();
-  const currentUserId = session?.user?.id;
+  const { user } = useCurrentUser();
+  const currentUserId = user?.id;
   const pathname = usePathname();
 
   const isSettings = pathname === '/settings/ratings';

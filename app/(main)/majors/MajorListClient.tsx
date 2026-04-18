@@ -347,24 +347,6 @@ export default function MajorListClient({ colleges }: Props) {
           </ul>
         </div>
 
-        {/* Mobile Filter button */}
-        <div>
-          <button
-            onClick={() => setIsFilterOpen(true)}
-            className="fixed bottom-4 right-4 flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-lg transition-opacity hover:opacity-90 lg:hidden"
-          >
-            <SlidersHorizontal className="size-4" />
-            Filters
-            {selected.length > 0 && (
-              <Badge
-                variant="secondary"
-                className="ml-1 bg-primary-foreground text-primary"
-              >
-                {selected.length}
-              </Badge>
-            )}
-          </button>
-        </div>
 
         {/* Sidebar Filter College */}
         <div className="w-4/12">
@@ -382,6 +364,25 @@ export default function MajorListClient({ colleges }: Props) {
               </div>
             ))}
           </section>
+        </div>
+
+        {/* Mobile Filter button */}
+        <div>
+          <button
+            onClick={() => setIsFilterOpen(true)}
+            className="fixed bottom-4 right-4 flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-lg transition-opacity hover:opacity-90 lg:hidden"
+          >
+            <SlidersHorizontal className="size-4" />
+            Filters
+            {selected.length > 0 && (
+              <Badge
+                variant="secondary"
+                className="ml-1 bg-primary-foreground text-primary"
+              >
+                {selected.length}
+              </Badge>
+            )}
+          </button>
         </div>
 
         {/* Filter College Mobile UI */}
