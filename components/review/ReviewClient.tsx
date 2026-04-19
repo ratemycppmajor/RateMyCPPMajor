@@ -77,14 +77,14 @@ export default function ReviewClient({ major, review }: Props) {
 
       if (!review) return;
 
-      const result = await updateReview({
+      const res = await updateReview({
         reviewId: review.id,
         reviewText,
         ratings,
       });
 
-      if (result?.error) {
-        setError(result.error);
+      if (res?.error) {
+        setError(res.error);
         return;
       }
 
@@ -96,14 +96,14 @@ export default function ReviewClient({ major, review }: Props) {
     startTransition(async () => {
       setError(null);
 
-      const result = await createReview({
+      const res = await createReview({
         slug: major.slug,
         reviewText,
         ratings,
       });
 
-      if (result?.error) {
-        setError(result.error);
+      if (res?.error) {
+        setError(res.error);
         return;
       }
 
@@ -157,30 +157,6 @@ export default function ReviewClient({ major, review }: Props) {
         <h2 className="my-6 text-2xl lg:text-3xl font-medium">
           {!review ? 'Write a' : 'Edit'} Review
         </h2>
-
-        
-  {/* const ratingOptions = [
-    {
-      name: 'Major',
-      key: 'major' as const,
-      description: 'Overall rating of the major program',
-    },
-    {
-      name: 'Career Readiness',
-      key: 'careerReadiness' as const,
-      description: 'How well the major prepares you for your career',
-    },
-    {
-      name: 'Difficulty',
-      key: 'difficulty' as const,
-      description: 'Academic challenge and workload',
-    },
-    {
-      name: 'Satisfaction',
-      key: 'satisfaction',
-      description: 'Overall satisfaction with the program',
-    },
-  ]; */}
 
         <div className="flex flex-col gap-y-10">
           {ratingOptions.map((option) => (
