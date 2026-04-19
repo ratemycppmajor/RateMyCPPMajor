@@ -44,10 +44,8 @@ const Hero = () => {
 
         if (res.ok) {
           const data = await res.json();
-          setSearchResults(data.majors || []);
-        } else {
-          setSearchResults([]);
-        }
+          setSearchResults(data.majors);
+        } 
       } catch (error) {
         console.error('Error searching majors:', error);
         setSearchResults([]);

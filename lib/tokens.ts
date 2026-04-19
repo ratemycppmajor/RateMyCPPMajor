@@ -40,7 +40,7 @@ export const generateVerificationToken = async (
       expires,
       userId: userId ?? undefined,
       purpose: purpose ?? undefined,
-    } as Prisma.VerificationTokenCreateInput,
+    }
   });
 
   return verificationToken;

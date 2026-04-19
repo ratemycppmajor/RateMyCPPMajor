@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useMemo, useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
+import { useCurrentUser } from '@/hooks/use-current-user';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Star, ThumbsUp, Trash, Pencil } from 'lucide-react';
@@ -52,8 +52,8 @@ export default function ReviewList({
   const [isDeleting, startDeleteTransition] = useTransition();
   const [isLiking, startLikeTransition] = useTransition();
   const router = useRouter();
-  const { data: session } = useSession();
-  const currentUserId = session?.user?.id;
+  const { user } = useCurrentUser();
+  const currentUserId = user?.id;
   const pathname = usePathname();
 
   const isSettings = pathname === '/settings/ratings';
@@ -61,24 +61,48 @@ export default function ReviewList({
   const REVIEWS_PER_VIEW = 5;
   const [visibleCount, setVisibleCount] = useState(initialVisibleCount);
 
-  const initialLikeState = useMemo(() => {
-    const map = new Map<string, { liked: boolean; count: number }>();
-
-    for (const review of reviews) {
-      map.set(review.id, {
-        liked: !!review.likedByMe,
-        count: review.likeCount ?? 0,
-      });
-    }
-
-    return map;
-  }, [reviews]);
-
-  const [likeState, setLikeState] = useState(initialLikeState);
+  const [reviewsState, setReviewsState] = useState(reviews);
 
   useEffect(() => {
-    setLikeState(initialLikeState);
-  }, [initialLikeState]);
+    setReviewsState(reviews);
+  }, [reviews]);
+
+  const handleLike = (reviewId: string) => {
+    if (!currentUserId) {
+      router.push('/login');
+      return;
+    }
+
+    let previousState = reviewsState;
+
+    // optimistic update
+    setReviewsState((prev) => {
+      previousState = prev;
+
+      return prev.map((review) => {
+        if (review.id !== reviewId) return review;
+
+        const isLiked = !!review.likedByMe;
+
+        return {
+          ...review,
+          likedByMe: !isLiked,
+          likeCount: Math.max(0, (review.likeCount ?? 0) + (isLiked ? -1 : 1)),
+        };
+      });
+    });
+
+    startLikeTransition(async () => {
+      const result = await likeReview(reviewId);
+
+      if (result?.error) {
+        setReviewsState(previousState); // revert back if error
+        return;
+      }
+
+      router.refresh();
+    });
+  };
 
   const handleReviewDeletion = (reviewId: string) => {
     startDeleteTransition(async () => {
@@ -87,39 +111,6 @@ export default function ReviewList({
     });
   };
 
-  const handleLike = (reviewId: string) => {
-    if (!currentUserId) {
-      router.push('/login');
-      return;
-    }
-
-    const prev = likeState.get(reviewId) ?? { liked: false, count: 0 };
-    const optimistic = {
-      liked: !prev.liked,
-      count: Math.max(0, prev.count + (prev.liked ? -1 : 1)),
-    };
-
-    setLikeState((m) => {
-      const next = new Map(m);
-      next.set(reviewId, optimistic);
-      return next;
-    });
-
-    startLikeTransition(async () => {
-      const result = await likeReview(reviewId);
-
-      if (result?.error) {
-        setLikeState((m) => {
-          const next = new Map(m);
-          next.set(reviewId, prev);
-          return next;
-        }); // revert back if error
-        return;
-      }
-
-      router.refresh();
-    });
-  };
 
   const visibleReviews = reviews.slice(0, visibleCount);
   const hasMore = visibleCount < reviews.length;
@@ -187,24 +178,18 @@ export default function ReviewList({
                 onClick={() => handleLike(review.id)}
                 disabled={isLiking}
                 className="flex items-center gap-2 cursor-pointer"
-                aria-label={
-                  likeState.get(review.id)?.liked
-                    ? 'Unlike review'
-                    : 'Like review'
-                }
+                aria-label={!!review.likedByMe ? 'Unlike review' : 'Like review'}
               >
                 <ThumbsUp
                   className={`h-5 w-5 transition-colors ${
-                    likeState.get(review.id)?.liked
+                    !!review.likedByMe
                       ? 'text-primary'
                       : 'text-black/70 hover:text-primary/80'
                   }`}
-                  fill={
-                    likeState.get(review.id)?.liked ? 'currentColor' : 'none'
-                  }
+                  fill={!!review.likedByMe ? 'currentColor' : 'none'}
                 />
                 <span className="text-sm font-semibold">
-                  {likeState.get(review.id)?.count ?? 0}
+                  {review.likeCount ?? 0}
                 </span>
               </button>
 

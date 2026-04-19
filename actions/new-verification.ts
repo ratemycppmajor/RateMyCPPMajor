@@ -35,7 +35,7 @@ export const newVerification = async (token: string) => {
 
   const user = existingToken.userId;
 
-  // CPP email verification: token was created with userId + purpose 'cpp_email' in settings
+  // 1. CPP email verification: token was created with userId + purpose 'cpp_email' in settings, when users add cpp email to that field.
   if (existingToken.purpose === 'cpp_email' && user) {
     const cppEmail = existingToken.email.toLowerCase();
 
@@ -59,7 +59,7 @@ export const newVerification = async (token: string) => {
     return { success: 'CPP email verified! You can now add reviews.' };
   }
 
-  // Primary email change: token was created with userId + purpose 'primary_email' in settings, used for in case user is changing their primary email to CPP email
+  // 2. Primary email change: token was created with userId + purpose 'primary_email' in settings, used for in case user is changing their primary email to CPP email
   if (existingToken.purpose === 'primary_email' && user) {
     const newEmailIsCpp = existingToken.email
       .toLowerCase()
