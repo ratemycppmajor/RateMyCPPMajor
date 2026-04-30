@@ -21,6 +21,7 @@ export type MajorWithRelations = Prisma.MajorGetPayload<{
     reviews: {
       select: {
         id: true;
+        academicClass: true;
         rating: true;
         careerReadiness: true;
         difficulty: true;

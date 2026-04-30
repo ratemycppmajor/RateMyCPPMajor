@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 
 type ReviewData = {
   id: string;
+  academicClass: 'freshman' | 'sophomore' | 'junior' | 'senior';
   rating: number;
   comment: string | null;
   careerReadiness: number;
@@ -44,9 +45,17 @@ export default function ReviewClient({ major, review }: Props) {
   });
 
   const [reviewText, setReviewText] = useState(review?.comment || '');
+  const [academicClass, setAcademicClass] = useState<'' | 'freshman' | 'sophomore' | 'junior' | 'senior'>(review?.academicClass ?? '');
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+
+  const academicClassOptions = [
+    { value: 'freshman', label: 'Freshman' },
+    { value: 'sophomore', label: 'Sophomore' },
+    { value: 'junior', label: 'Junior' },
+    { value: 'senior', label: 'Senior' },
+  ] as const;
 
   const ratingOptions = [
     {
@@ -79,6 +88,7 @@ export default function ReviewClient({ major, review }: Props) {
 
       const res = await updateReview({
         reviewId: review.id,
+        academicClass: academicClass as Exclude<typeof academicClass, ''>,
         reviewText,
         ratings,
       });
@@ -98,6 +108,7 @@ export default function ReviewClient({ major, review }: Props) {
 
       const res = await createReview({
         slug: major.slug,
+        academicClass: academicClass as Exclude<typeof academicClass, ''>,
         reviewText,
         ratings,
       });
@@ -116,6 +127,7 @@ export default function ReviewClient({ major, review }: Props) {
   };
 
   const isFormValid =
+    academicClass.length > 0 &&
     ratings.major > 0 &&
     ratings.careerReadiness > 0 &&
     ratings.difficulty > 0 &&
@@ -159,6 +171,28 @@ export default function ReviewClient({ major, review }: Props) {
         </h2>
 
         <div className="flex flex-col gap-y-10">
+          <div className="flex flex-col gap-3 p-6 border rounded-xl bg-card">
+            <label className="font-semibold text-xl">Class standing</label>
+            <span className="text-primary/80">
+              Select your current year when writing this review
+            </span>
+            <select
+              value={academicClass}
+              onChange={(e) => setAcademicClass(e.target.value as '' | 'freshman' | 'sophomore' | 'junior' | 'senior')}
+              className="h-11 rounded-md border border-input bg-background px-3 text-base text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              aria-label="Select class standing"
+            >
+              <option value="" disabled>
+                Select one...
+              </option>
+              {academicClassOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
           {ratingOptions.map((option) => (
             <StarRating
               key={option.key}

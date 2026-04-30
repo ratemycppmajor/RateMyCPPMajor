@@ -27,6 +27,7 @@ import { likeReview } from '@/actions/like-review';
 
 type Review = {
   id: string;
+  academicClass: string;
   rating: number;
   careerReadiness: number;
   difficulty: number;
@@ -134,11 +135,16 @@ export default function ReviewList({
                   );
                 })}
               </div>
-              <span className="font-semibold">
-                {typeof review.createdAt === 'string'
-                  ? new Date(review.createdAt).toLocaleDateString()
-                  : review.createdAt.toLocaleDateString()}
-              </span>
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-semibold rounded-full border bg-zinc-50 px-3 py-1 text-black">
+                  {review.academicClass.charAt(0).toUpperCase() + review.academicClass.slice(1)}
+                </span>
+                <span className="font-semibold">
+                  {typeof review.createdAt === 'string'
+                    ? new Date(review.createdAt).toLocaleDateString()
+                    : review.createdAt.toLocaleDateString()}
+                </span>
+              </div>
             </div>
             {isSettings && (
               <Link
@@ -153,19 +159,19 @@ export default function ReviewList({
               <li className="border rounded-2xl p-1.5 bg-zinc-50 text-sm">
                 Career Readiness:{' '}
                 <span className="font-semibold text-primary">
-                  {review.careerReadiness}
+                  {review.careerReadiness}<span className='text-xs'>/5</span>
                 </span>
               </li>
               <li className="border rounded-2xl p-1.5 bg-zinc-50 text-sm">
                 Difficulty:{' '}
                 <span className="font-semibold text-primary">
-                  {review.difficulty}
+                  {review.difficulty}<span className='text-xs'>/5</span>
                 </span>
               </li>
               <li className="border rounded-2xl p-1.5 bg-zinc-50 text-sm">
                 Satisfaction:{' '}
                 <span className="font-semibold text-primary">
-                  {review.satisfaction}
+                  {review.satisfaction}<span className='text-xs'>/5</span>
                 </span>
               </li>
             </ul>
