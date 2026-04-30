@@ -4,11 +4,12 @@ import { z } from 'zod';
 
 import { db } from '@/lib/db';
 import { currentUser } from '@/lib/auth';
-import { RatingSchema } from '@/schemas';
+import { AcademicClassSchema, RatingSchema } from '@/schemas';
 
 const UpdateReviewSchema = z
   .object({
     reviewId: z.string().min(1),
+    academicClass: AcademicClassSchema,
     reviewText: z.string().min(60, 'Review must be at least 60 characters'),
     ratings: RatingSchema,
   })
@@ -25,7 +26,7 @@ export const updateReview = async (input: z.infer<typeof UpdateReviewSchema>) =>
     return { error: parsed.error.issues[0]?.message ?? 'Invalid data' };
   }
 
-  const { reviewId, reviewText, ratings } = parsed.data;
+  const { reviewId, academicClass, reviewText, ratings } = parsed.data;
 
   // Check if review exists and belongs to the user
   const existingReview = await db.review.findUnique({
@@ -44,6 +45,7 @@ export const updateReview = async (input: z.infer<typeof UpdateReviewSchema>) =>
   const review = await db.review.update({
     where: { id: reviewId },
     data: {
+      academicClass,
       rating: ratings.major,
       comment: reviewText,
       careerReadiness: ratings.careerReadiness,

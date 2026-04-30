@@ -17,7 +17,7 @@ export const createReview = async (input: z.infer<typeof ReviewSchema>) => {
     return { error: parsed.error.issues[0]?.message ?? 'Invalid data' };
   }
 
-  const { slug, reviewText, ratings } = parsed.data;
+  const { slug, academicClass, reviewText, ratings } = parsed.data;
 
   const major = await db.major.findUnique({
     where: { slug },
@@ -43,6 +43,7 @@ export const createReview = async (input: z.infer<typeof ReviewSchema>) => {
 
   const review = await db.review.create({
     data: {
+      academicClass,
       rating: ratings.major,
       comment: reviewText,
       careerReadiness: ratings.careerReadiness,
