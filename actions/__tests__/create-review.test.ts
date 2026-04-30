@@ -23,6 +23,7 @@ describe('createReview action', () => {
   const userId = 'user-1';
   const validInput = {
     slug: 'computer-science',
+    academicClass: 'freshman' as const,
     reviewText: 'A'.repeat(60),
     ratings: {
       major: 3,
@@ -107,6 +108,7 @@ describe('createReview action', () => {
       id: 'review-1',
       userId,
       majorId: 'major-1',
+      academicClass: 'freshman',
       rating: 3,
       comment: validInput.reviewText,
       careerReadiness: 4,
@@ -119,6 +121,7 @@ describe('createReview action', () => {
 
     expect(db.review.create).toHaveBeenCalledWith({
       data: {
+        academicClass: 'freshman',
         rating: 3,
         comment: validInput.reviewText,
         careerReadiness: 4,

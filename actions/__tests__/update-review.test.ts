@@ -18,6 +18,7 @@ describe('updateReview action', () => {
   const reviewId = 'review-1';
   const validInput = {
     reviewId,
+    academicClass: 'senior' as const,
     reviewText: 'A'.repeat(60),
     ratings: {
       major: 4,
@@ -90,6 +91,7 @@ describe('updateReview action', () => {
     const updatedReview = {
       id: reviewId,
       userId,
+      academicClass: 'senior',
       rating: 4,
       comment: validInput.reviewText,
       careerReadiness: 5,
@@ -103,6 +105,7 @@ describe('updateReview action', () => {
     expect(db.review.update).toHaveBeenCalledWith({
       where: { id: reviewId },
       data: {
+        academicClass: 'senior',
         rating: 4,
         comment: validInput.reviewText,
         careerReadiness: 5,
