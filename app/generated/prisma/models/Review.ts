@@ -42,6 +42,7 @@ export type ReviewSumAggregateOutputType = {
 
 export type ReviewMinAggregateOutputType = {
   id: string | null
+  academicClass: $Enums.AcademicClass | null
   rating: number | null
   comment: string | null
   careerReadiness: number | null
@@ -54,6 +55,7 @@ export type ReviewMinAggregateOutputType = {
 
 export type ReviewMaxAggregateOutputType = {
   id: string | null
+  academicClass: $Enums.AcademicClass | null
   rating: number | null
   comment: string | null
   careerReadiness: number | null
@@ -66,6 +68,7 @@ export type ReviewMaxAggregateOutputType = {
 
 export type ReviewCountAggregateOutputType = {
   id: number
+  academicClass: number
   rating: number
   comment: number
   careerReadiness: number
@@ -94,6 +97,7 @@ export type ReviewSumAggregateInputType = {
 
 export type ReviewMinAggregateInputType = {
   id?: true
+  academicClass?: true
   rating?: true
   comment?: true
   careerReadiness?: true
@@ -106,6 +110,7 @@ export type ReviewMinAggregateInputType = {
 
 export type ReviewMaxAggregateInputType = {
   id?: true
+  academicClass?: true
   rating?: true
   comment?: true
   careerReadiness?: true
@@ -118,6 +123,7 @@ export type ReviewMaxAggregateInputType = {
 
 export type ReviewCountAggregateInputType = {
   id?: true
+  academicClass?: true
   rating?: true
   comment?: true
   careerReadiness?: true
@@ -217,6 +223,7 @@ export type ReviewGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 
 export type ReviewGroupByOutputType = {
   id: string
+  academicClass: $Enums.AcademicClass
   rating: number
   comment: string | null
   careerReadiness: number
@@ -252,6 +259,7 @@ export type ReviewWhereInput = {
   OR?: Prisma.ReviewWhereInput[]
   NOT?: Prisma.ReviewWhereInput | Prisma.ReviewWhereInput[]
   id?: Prisma.StringFilter<"Review"> | string
+  academicClass?: Prisma.EnumAcademicClassFilter<"Review"> | $Enums.AcademicClass
   rating?: Prisma.IntFilter<"Review"> | number
   comment?: Prisma.StringNullableFilter<"Review"> | string | null
   careerReadiness?: Prisma.IntFilter<"Review"> | number
@@ -267,6 +275,7 @@ export type ReviewWhereInput = {
 
 export type ReviewOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  academicClass?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   comment?: Prisma.SortOrderInput | Prisma.SortOrder
   careerReadiness?: Prisma.SortOrder
@@ -286,6 +295,7 @@ export type ReviewWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.ReviewWhereInput | Prisma.ReviewWhereInput[]
   OR?: Prisma.ReviewWhereInput[]
   NOT?: Prisma.ReviewWhereInput | Prisma.ReviewWhereInput[]
+  academicClass?: Prisma.EnumAcademicClassFilter<"Review"> | $Enums.AcademicClass
   rating?: Prisma.IntFilter<"Review"> | number
   comment?: Prisma.StringNullableFilter<"Review"> | string | null
   careerReadiness?: Prisma.IntFilter<"Review"> | number
@@ -301,6 +311,7 @@ export type ReviewWhereUniqueInput = Prisma.AtLeast<{
 
 export type ReviewOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  academicClass?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   comment?: Prisma.SortOrderInput | Prisma.SortOrder
   careerReadiness?: Prisma.SortOrder
@@ -321,6 +332,7 @@ export type ReviewScalarWhereWithAggregatesInput = {
   OR?: Prisma.ReviewScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ReviewScalarWhereWithAggregatesInput | Prisma.ReviewScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Review"> | string
+  academicClass?: Prisma.EnumAcademicClassWithAggregatesFilter<"Review"> | $Enums.AcademicClass
   rating?: Prisma.IntWithAggregatesFilter<"Review"> | number
   comment?: Prisma.StringNullableWithAggregatesFilter<"Review"> | string | null
   careerReadiness?: Prisma.IntWithAggregatesFilter<"Review"> | number
@@ -333,6 +345,7 @@ export type ReviewScalarWhereWithAggregatesInput = {
 
 export type ReviewCreateInput = {
   id?: string
+  academicClass: $Enums.AcademicClass
   rating: number
   comment?: string | null
   careerReadiness: number
@@ -346,6 +359,7 @@ export type ReviewCreateInput = {
 
 export type ReviewUncheckedCreateInput = {
   id?: string
+  academicClass: $Enums.AcademicClass
   rating: number
   comment?: string | null
   careerReadiness: number
@@ -359,6 +373,7 @@ export type ReviewUncheckedCreateInput = {
 
 export type ReviewUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  academicClass?: Prisma.EnumAcademicClassFieldUpdateOperationsInput | $Enums.AcademicClass
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   careerReadiness?: Prisma.IntFieldUpdateOperationsInput | number
@@ -372,6 +387,7 @@ export type ReviewUpdateInput = {
 
 export type ReviewUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  academicClass?: Prisma.EnumAcademicClassFieldUpdateOperationsInput | $Enums.AcademicClass
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   careerReadiness?: Prisma.IntFieldUpdateOperationsInput | number
@@ -385,6 +401,7 @@ export type ReviewUncheckedUpdateInput = {
 
 export type ReviewCreateManyInput = {
   id?: string
+  academicClass: $Enums.AcademicClass
   rating: number
   comment?: string | null
   careerReadiness: number
@@ -397,6 +414,7 @@ export type ReviewCreateManyInput = {
 
 export type ReviewUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  academicClass?: Prisma.EnumAcademicClassFieldUpdateOperationsInput | $Enums.AcademicClass
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   careerReadiness?: Prisma.IntFieldUpdateOperationsInput | number
@@ -407,6 +425,7 @@ export type ReviewUpdateManyMutationInput = {
 
 export type ReviewUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  academicClass?: Prisma.EnumAcademicClassFieldUpdateOperationsInput | $Enums.AcademicClass
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   careerReadiness?: Prisma.IntFieldUpdateOperationsInput | number
@@ -434,6 +453,7 @@ export type ReviewUserIdMajorIdCompoundUniqueInput = {
 
 export type ReviewCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  academicClass?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   comment?: Prisma.SortOrder
   careerReadiness?: Prisma.SortOrder
@@ -453,6 +473,7 @@ export type ReviewAvgOrderByAggregateInput = {
 
 export type ReviewMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  academicClass?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   comment?: Prisma.SortOrder
   careerReadiness?: Prisma.SortOrder
@@ -465,6 +486,7 @@ export type ReviewMaxOrderByAggregateInput = {
 
 export type ReviewMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  academicClass?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   comment?: Prisma.SortOrder
   careerReadiness?: Prisma.SortOrder
@@ -527,6 +549,10 @@ export type ReviewUncheckedUpdateManyWithoutMajorNestedInput = {
   update?: Prisma.ReviewUpdateWithWhereUniqueWithoutMajorInput | Prisma.ReviewUpdateWithWhereUniqueWithoutMajorInput[]
   updateMany?: Prisma.ReviewUpdateManyWithWhereWithoutMajorInput | Prisma.ReviewUpdateManyWithWhereWithoutMajorInput[]
   deleteMany?: Prisma.ReviewScalarWhereInput | Prisma.ReviewScalarWhereInput[]
+}
+
+export type EnumAcademicClassFieldUpdateOperationsInput = {
+  set?: $Enums.AcademicClass
 }
 
 export type IntFieldUpdateOperationsInput = {
@@ -595,6 +621,7 @@ export type ReviewUncheckedUpdateManyWithoutUserNestedInput = {
 
 export type ReviewCreateWithoutMajorInput = {
   id?: string
+  academicClass: $Enums.AcademicClass
   rating: number
   comment?: string | null
   careerReadiness: number
@@ -607,6 +634,7 @@ export type ReviewCreateWithoutMajorInput = {
 
 export type ReviewUncheckedCreateWithoutMajorInput = {
   id?: string
+  academicClass: $Enums.AcademicClass
   rating: number
   comment?: string | null
   careerReadiness: number
@@ -648,6 +676,7 @@ export type ReviewScalarWhereInput = {
   OR?: Prisma.ReviewScalarWhereInput[]
   NOT?: Prisma.ReviewScalarWhereInput | Prisma.ReviewScalarWhereInput[]
   id?: Prisma.StringFilter<"Review"> | string
+  academicClass?: Prisma.EnumAcademicClassFilter<"Review"> | $Enums.AcademicClass
   rating?: Prisma.IntFilter<"Review"> | number
   comment?: Prisma.StringNullableFilter<"Review"> | string | null
   careerReadiness?: Prisma.IntFilter<"Review"> | number
@@ -660,6 +689,7 @@ export type ReviewScalarWhereInput = {
 
 export type ReviewCreateWithoutLikesInput = {
   id?: string
+  academicClass: $Enums.AcademicClass
   rating: number
   comment?: string | null
   careerReadiness: number
@@ -672,6 +702,7 @@ export type ReviewCreateWithoutLikesInput = {
 
 export type ReviewUncheckedCreateWithoutLikesInput = {
   id?: string
+  academicClass: $Enums.AcademicClass
   rating: number
   comment?: string | null
   careerReadiness: number
@@ -700,6 +731,7 @@ export type ReviewUpdateToOneWithWhereWithoutLikesInput = {
 
 export type ReviewUpdateWithoutLikesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  academicClass?: Prisma.EnumAcademicClassFieldUpdateOperationsInput | $Enums.AcademicClass
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   careerReadiness?: Prisma.IntFieldUpdateOperationsInput | number
@@ -712,6 +744,7 @@ export type ReviewUpdateWithoutLikesInput = {
 
 export type ReviewUncheckedUpdateWithoutLikesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  academicClass?: Prisma.EnumAcademicClassFieldUpdateOperationsInput | $Enums.AcademicClass
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   careerReadiness?: Prisma.IntFieldUpdateOperationsInput | number
@@ -724,6 +757,7 @@ export type ReviewUncheckedUpdateWithoutLikesInput = {
 
 export type ReviewCreateWithoutUserInput = {
   id?: string
+  academicClass: $Enums.AcademicClass
   rating: number
   comment?: string | null
   careerReadiness: number
@@ -736,6 +770,7 @@ export type ReviewCreateWithoutUserInput = {
 
 export type ReviewUncheckedCreateWithoutUserInput = {
   id?: string
+  academicClass: $Enums.AcademicClass
   rating: number
   comment?: string | null
   careerReadiness: number
@@ -774,6 +809,7 @@ export type ReviewUpdateManyWithWhereWithoutUserInput = {
 
 export type ReviewCreateManyMajorInput = {
   id?: string
+  academicClass: $Enums.AcademicClass
   rating: number
   comment?: string | null
   careerReadiness: number
@@ -785,6 +821,7 @@ export type ReviewCreateManyMajorInput = {
 
 export type ReviewUpdateWithoutMajorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  academicClass?: Prisma.EnumAcademicClassFieldUpdateOperationsInput | $Enums.AcademicClass
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   careerReadiness?: Prisma.IntFieldUpdateOperationsInput | number
@@ -797,6 +834,7 @@ export type ReviewUpdateWithoutMajorInput = {
 
 export type ReviewUncheckedUpdateWithoutMajorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  academicClass?: Prisma.EnumAcademicClassFieldUpdateOperationsInput | $Enums.AcademicClass
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   careerReadiness?: Prisma.IntFieldUpdateOperationsInput | number
@@ -809,6 +847,7 @@ export type ReviewUncheckedUpdateWithoutMajorInput = {
 
 export type ReviewUncheckedUpdateManyWithoutMajorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  academicClass?: Prisma.EnumAcademicClassFieldUpdateOperationsInput | $Enums.AcademicClass
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   careerReadiness?: Prisma.IntFieldUpdateOperationsInput | number
@@ -820,6 +859,7 @@ export type ReviewUncheckedUpdateManyWithoutMajorInput = {
 
 export type ReviewCreateManyUserInput = {
   id?: string
+  academicClass: $Enums.AcademicClass
   rating: number
   comment?: string | null
   careerReadiness: number
@@ -831,6 +871,7 @@ export type ReviewCreateManyUserInput = {
 
 export type ReviewUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  academicClass?: Prisma.EnumAcademicClassFieldUpdateOperationsInput | $Enums.AcademicClass
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   careerReadiness?: Prisma.IntFieldUpdateOperationsInput | number
@@ -843,6 +884,7 @@ export type ReviewUpdateWithoutUserInput = {
 
 export type ReviewUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  academicClass?: Prisma.EnumAcademicClassFieldUpdateOperationsInput | $Enums.AcademicClass
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   careerReadiness?: Prisma.IntFieldUpdateOperationsInput | number
@@ -855,6 +897,7 @@ export type ReviewUncheckedUpdateWithoutUserInput = {
 
 export type ReviewUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  academicClass?: Prisma.EnumAcademicClassFieldUpdateOperationsInput | $Enums.AcademicClass
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   careerReadiness?: Prisma.IntFieldUpdateOperationsInput | number
@@ -897,6 +940,7 @@ export type ReviewCountOutputTypeCountLikesArgs<ExtArgs extends runtime.Types.Ex
 
 export type ReviewSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  academicClass?: boolean
   rating?: boolean
   comment?: boolean
   careerReadiness?: boolean
@@ -913,6 +957,7 @@ export type ReviewSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 
 export type ReviewSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  academicClass?: boolean
   rating?: boolean
   comment?: boolean
   careerReadiness?: boolean
@@ -927,6 +972,7 @@ export type ReviewSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
 
 export type ReviewSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  academicClass?: boolean
   rating?: boolean
   comment?: boolean
   careerReadiness?: boolean
@@ -941,6 +987,7 @@ export type ReviewSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
 
 export type ReviewSelectScalar = {
   id?: boolean
+  academicClass?: boolean
   rating?: boolean
   comment?: boolean
   careerReadiness?: boolean
@@ -951,7 +998,7 @@ export type ReviewSelectScalar = {
   majorId?: boolean
 }
 
-export type ReviewOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "rating" | "comment" | "careerReadiness" | "difficulty" | "satisfaction" | "createdAt" | "userId" | "majorId", ExtArgs["result"]["review"]>
+export type ReviewOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "academicClass" | "rating" | "comment" | "careerReadiness" | "difficulty" | "satisfaction" | "createdAt" | "userId" | "majorId", ExtArgs["result"]["review"]>
 export type ReviewInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   major?: boolean | Prisma.MajorDefaultArgs<ExtArgs>
@@ -976,6 +1023,7 @@ export type $ReviewPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    academicClass: $Enums.AcademicClass
     rating: number
     comment: string | null
     careerReadiness: number
@@ -1411,6 +1459,7 @@ export interface Prisma__ReviewClient<T, Null = never, ExtArgs extends runtime.T
  */
 export interface ReviewFieldRefs {
   readonly id: Prisma.FieldRef<"Review", 'String'>
+  readonly academicClass: Prisma.FieldRef<"Review", 'AcademicClass'>
   readonly rating: Prisma.FieldRef<"Review", 'Int'>
   readonly comment: Prisma.FieldRef<"Review", 'String'>
   readonly careerReadiness: Prisma.FieldRef<"Review", 'Int'>

@@ -7,6 +7,13 @@ datasource db {
   provider  = "postgresql"
 }
 
+enum AcademicClass {
+  freshman
+  sophomore
+  junior
+  senior
+}
+
 model College {
   id          String        @id @default(cuid())
   name        String         @unique
@@ -47,6 +54,7 @@ model Major {
 
 model Review {
   id        String   @id @default(cuid())
+  academicClass      AcademicClass
   rating    Int
   comment   String?
   careerReadiness  Int      @db.SmallInt

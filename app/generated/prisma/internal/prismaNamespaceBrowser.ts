@@ -117,6 +117,7 @@ export type MajorScalarFieldEnum = (typeof MajorScalarFieldEnum)[keyof typeof Ma
 
 export const ReviewScalarFieldEnum = {
   id: 'id',
+  academicClass: 'academicClass',
   rating: 'rating',
   comment: 'comment',
   careerReadiness: 'careerReadiness',
