@@ -137,6 +137,13 @@ export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedFloatNullableFilter<$PrismaModel>
 }
 
+export type EnumAcademicClassFilter<$PrismaModel = never> = {
+  equals?: $Enums.AcademicClass | Prisma.EnumAcademicClassFieldRefInput<$PrismaModel>
+  in?: $Enums.AcademicClass[] | Prisma.ListEnumAcademicClassFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AcademicClass[] | Prisma.ListEnumAcademicClassFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAcademicClassFilter<$PrismaModel> | $Enums.AcademicClass
+}
+
 export type IntFilter<$PrismaModel = never> = {
   equals?: number | Prisma.IntFieldRefInput<$PrismaModel>
   in?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel>
@@ -146,6 +153,16 @@ export type IntFilter<$PrismaModel = never> = {
   gt?: number | Prisma.IntFieldRefInput<$PrismaModel>
   gte?: number | Prisma.IntFieldRefInput<$PrismaModel>
   not?: Prisma.NestedIntFilter<$PrismaModel> | number
+}
+
+export type EnumAcademicClassWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.AcademicClass | Prisma.EnumAcademicClassFieldRefInput<$PrismaModel>
+  in?: $Enums.AcademicClass[] | Prisma.ListEnumAcademicClassFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AcademicClass[] | Prisma.ListEnumAcademicClassFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAcademicClassWithAggregatesFilter<$PrismaModel> | $Enums.AcademicClass
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumAcademicClassFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumAcademicClassFilter<$PrismaModel>
 }
 
 export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -363,6 +380,23 @@ export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedFloatNullableFilter<$PrismaModel>
   _min?: Prisma.NestedFloatNullableFilter<$PrismaModel>
   _max?: Prisma.NestedFloatNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumAcademicClassFilter<$PrismaModel = never> = {
+  equals?: $Enums.AcademicClass | Prisma.EnumAcademicClassFieldRefInput<$PrismaModel>
+  in?: $Enums.AcademicClass[] | Prisma.ListEnumAcademicClassFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AcademicClass[] | Prisma.ListEnumAcademicClassFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAcademicClassFilter<$PrismaModel> | $Enums.AcademicClass
+}
+
+export type NestedEnumAcademicClassWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.AcademicClass | Prisma.EnumAcademicClassFieldRefInput<$PrismaModel>
+  in?: $Enums.AcademicClass[] | Prisma.ListEnumAcademicClassFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AcademicClass[] | Prisma.ListEnumAcademicClassFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAcademicClassWithAggregatesFilter<$PrismaModel> | $Enums.AcademicClass
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumAcademicClassFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumAcademicClassFilter<$PrismaModel>
 }
 
 export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {

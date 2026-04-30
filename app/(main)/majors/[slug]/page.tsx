@@ -25,6 +25,7 @@ export default async function Major({
       reviews: {
         select: {
           id: true,
+          academicClass: true,
           rating: true,
           careerReadiness: true,
           difficulty: true,

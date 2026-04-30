@@ -98,9 +98,17 @@ export const RatingSchema = z
   })
   .strict();
 
+export const AcademicClassSchema = z.enum(
+  ['freshman', 'sophomore', 'junior', 'senior'],
+  {
+    message: 'Please select your class standing',
+  },
+);
+
 export const ReviewSchema = z
   .object({
     slug: z.string().min(1),
+    academicClass: AcademicClassSchema,
     reviewText: z.string().min(60, 'Review must be at least 60 characters'),
     ratings: RatingSchema,
   })

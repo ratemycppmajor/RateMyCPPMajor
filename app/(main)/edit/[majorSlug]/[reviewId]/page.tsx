@@ -20,6 +20,7 @@ export default async function EditReview({
     where: { id: reviewId },
     select: {
       id: true,
+      academicClass: true,
       rating: true,
       comment: true,
       careerReadiness: true,

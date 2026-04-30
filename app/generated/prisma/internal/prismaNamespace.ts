@@ -1156,6 +1156,7 @@ export type MajorScalarFieldEnum = (typeof MajorScalarFieldEnum)[keyof typeof Ma
 
 export const ReviewScalarFieldEnum = {
   id: 'id',
+  academicClass: 'academicClass',
   rating: 'rating',
   comment: 'comment',
   careerReadiness: 'careerReadiness',
@@ -1303,6 +1304,20 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'Float[]'
  */
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
+ * Reference to a field of type 'AcademicClass'
+ */
+export type EnumAcademicClassFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AcademicClass'>
+    
+
+
+/**
+ * Reference to a field of type 'AcademicClass[]'
+ */
+export type ListEnumAcademicClassFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AcademicClass[]'>
     
 
 
