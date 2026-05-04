@@ -2,6 +2,7 @@ import ReviewList from '@/components/review/ReviewList';
 
 type Review = {
   id: string;
+  academicClass: string;
   rating: number;
   careerReadiness: number;
   difficulty: number;
