@@ -9,8 +9,15 @@ import type { User } from '@/app/generated/prisma/client';
  */
 export const getUserByEmail = async (email: string): Promise<User | null> => {
   try {
-    const user = await db.user.findUnique({ where: { email } });
-
+    const user = await db.user.findFirst({
+      where: {
+        OR: [
+          { email },
+          { cppEmail: email },
+        ],
+      },
+    });
+    
     return user;
   } catch (error) {
     console.error(error);
