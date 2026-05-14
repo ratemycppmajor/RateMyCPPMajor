@@ -3,6 +3,7 @@ import { getUserByEmail, getUserById } from '../user';
 jest.mock('@/lib/db', () => ({
   db: {
     user: {
+      findFirst: jest.fn(),
       findUnique: jest.fn(),
     },
   },
@@ -17,16 +18,16 @@ describe('user service', () => {
 
   describe('getUserByEmail', () => {
     it('returns null when user not found', async () => {
-      db.user.findUnique.mockResolvedValue(null);
+      db.user.findFirst.mockResolvedValue(null);
 
       const result = await getUserByEmail('missing@example.com');
 
       expect(result).toBeNull();
     });
 
-    it('returns null and logs error when findUnique throws', async () => {
+    it('returns null and logs error when findFirst throws', async () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-      db.user.findUnique.mockRejectedValue(new Error('DB error'));
+      db.user.findFirst.mockRejectedValue(new Error('DB error'));
 
       const result = await getUserByEmail('test@example.com');
 
@@ -47,12 +48,14 @@ describe('user service', () => {
         updatedAt: new Date(),
       };
 
-      db.user.findUnique.mockResolvedValue(mockUser);
+      db.user.findFirst.mockResolvedValue(mockUser);
 
       const result = await getUserByEmail('test@example.com');
 
-      expect(db.user.findUnique).toHaveBeenCalledWith({
-        where: { email: 'test@example.com' },
+      expect(db.user.findFirst).toHaveBeenCalledWith({
+        where: {
+          OR: [{ email: 'test@example.com' }, { cppEmail: 'test@example.com' }],
+        },
       });
       expect(result).toEqual(mockUser);
     });
